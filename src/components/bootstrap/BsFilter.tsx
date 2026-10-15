@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
 export const BsFilter: React.FC = () => {
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(true);
+  const [showAreaDropdown, setShowAreaDropdown] = useState(false);
+  const [showPriceDropdown, setShowPriceDropdown] = useState(false);
+  const [selectedArea, setSelectedArea] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState('');
 
   return (
     <div className="container-fluid px-3 px-md-4 mt-3 mt-md-4">
@@ -53,43 +57,65 @@ export const BsFilter: React.FC = () => {
         </div>
       </div>
 
-      {/* Advanced Filter Collapse Box */}
+      {/* Advanced Filter Collapse Box - 1:1 with Figma Frame 215 */}
       {showAdvanced && (
-        <div className="card shadow-sm border-0 mb-3 p-3 bg-white rounded-3">
-          <h5 className="fw-bold text-primary small text-uppercase mb-3" style={{ letterSpacing: '0.5px' }}>
+        <div className="card shadow-sm border mb-3 p-3 p-md-4 bg-white" style={{ borderRadius: '10px', borderColor: '#e2e8f0' }}>
+          <h5 className="fw-bold small text-uppercase mb-3" style={{ color: '#0d6efd', letterSpacing: '0.3px', fontSize: '15px' }}>
             BỘ LỌC NÂNG CAO
           </h5>
 
-          <div className="row g-2 g-md-3">
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Mã căn hộ</label>
-              <input type="text" className="form-control form-control-sm" placeholder="Nhập mã căn hộ" />
+          {/* 3 columns x 2 rows */}
+          <div className="row g-3">
+            {/* ROW 1 - COL 1: Mã căn hộ */}
+            <div className="col-12 col-md-4">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Mã căn hộ</label>
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="Nhập mã căn hộ"
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db' }}
+              />
             </div>
 
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Phân khu</label>
-              <select className="form-select form-select-sm" defaultValue="">
-                <option value="">Chọn phân khu</option>
+            {/* ROW 1 - COL 2: Phân khu */}
+            <div className="col-12 col-md-4">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Phân khu</label>
+              <select
+                className="form-select form-select-sm"
+                defaultValue=""
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db' }}
+              >
+                <option value="" disabled className="text-muted">Chọn phân khu</option>
                 <option value="1">Phân khu 1</option>
                 <option value="2">Phân khu 2</option>
                 <option value="3">Phân khu 3</option>
               </select>
             </div>
 
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Loại căn</label>
-              <select className="form-select form-select-sm" defaultValue="">
-                <option value="">Chọn loại căn</option>
+            {/* ROW 1 - COL 3: Loại căn */}
+            <div className="col-12 col-md-4">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Loại căn</label>
+              <select
+                className="form-select form-select-sm"
+                defaultValue=""
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db' }}
+              >
+                <option value="" disabled className="text-muted">Chọn loại căn</option>
                 <option value="shophouse">Shophouse</option>
                 <option value="villa">Biệt thự</option>
                 <option value="townhouse">Liền kề</option>
               </select>
             </div>
 
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Hướng đất</label>
-              <select className="form-select form-select-sm" defaultValue="">
-                <option value="">Chọn hướng đất</option>
+            {/* ROW 2 - COL 1: Hướng đất */}
+            <div className="col-12 col-md-4">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Hướng đất</label>
+              <select
+                className="form-select form-select-sm"
+                defaultValue=""
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db' }}
+              >
+                <option value="" disabled className="text-muted">Chọn hướng đất</option>
                 <option value="east">Đông</option>
                 <option value="west">Tây</option>
                 <option value="south">Nam</option>
@@ -98,36 +124,151 @@ export const BsFilter: React.FC = () => {
               </select>
             </div>
 
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Diện tích</label>
-              <select className="form-select form-select-sm" defaultValue="">
-                <option value="">Chọn diện tích</option>
-                <option value="<100">&lt; 100 m²</option>
-                <option value="100-200">100 - 200 m²</option>
-                <option value=">200">&gt; 200 m²</option>
-              </select>
+            {/* ROW 2 - COL 2: Diện tích */}
+            <div className="col-12 col-md-4 position-relative">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Diện tích</label>
+              <div
+                className="form-select form-select-sm d-flex align-items-center justify-content-between cursor-pointer"
+                onClick={() => {
+                  setShowAreaDropdown(!showAreaDropdown);
+                  setShowPriceDropdown(false);
+                }}
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db', cursor: 'pointer' }}
+              >
+                <span className={selectedArea ? 'text-dark' : 'text-muted'}>
+                  {selectedArea || 'Chọn diện tích'}
+                </span>
+              </div>
+
+              {/* Popover */}
+              {showAreaDropdown && (
+                <div
+                  className="card position-absolute shadow p-3 bg-white border"
+                  style={{ top: '100%', left: '12px', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
+                >
+                  <div className="d-flex align-items-center gap-2 mb-3">
+                    <div className="flex-grow-1">
+                      <div className="text-muted small mb-1" style={{ fontSize: '11px' }}>Thấp nhất</div>
+                      <input type="number" className="form-control form-control-sm text-center" placeholder="0" />
+                    </div>
+                    <div className="pt-3 text-muted fw-bold">→</div>
+                    <div className="flex-grow-1">
+                      <div className="text-muted small mb-1" style={{ fontSize: '11px' }}>Cao nhất</div>
+                      <input type="number" className="form-control form-control-sm text-center" placeholder="0" />
+                    </div>
+                  </div>
+
+                  <div className="fw-semibold text-dark small mb-2" style={{ fontSize: '13px' }}>Tất cả mức giá</div>
+                  {['Dưới 50m²', '50m² đến 70m²', '70m² đến 90m²', '90m² đến 120m²', 'Trên 120m2'].map((item) => (
+                    <div className="form-check py-1" key={item}>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="bsAreaRadio"
+                        id={`area-${item}`}
+                        checked={selectedArea === item}
+                        onChange={() => {
+                          setSelectedArea(item);
+                          setShowAreaDropdown(false);
+                        }}
+                      />
+                      <label className="form-check-label small text-dark" htmlFor={`area-${item}`} style={{ fontSize: '13px' }}>
+                        {item}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
-              <label className="form-label small text-muted mb-1">Khoảng giá</label>
-              <select className="form-select form-select-sm" defaultValue="">
-                <option value="">Chọn khoảng giá</option>
-                <option value="<10">&lt; 10 tỷ</option>
-                <option value="10-20">10 - 20 tỷ</option>
-                <option value=">20">&gt; 20 tỷ</option>
-              </select>
+            {/* ROW 2 - COL 3: Khoảng giá */}
+            <div className="col-12 col-md-4 position-relative">
+              <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Khoảng giá</label>
+              <div
+                className="form-select form-select-sm d-flex align-items-center justify-content-between cursor-pointer"
+                onClick={() => {
+                  setShowPriceDropdown(!showPriceDropdown);
+                  setShowAreaDropdown(false);
+                }}
+                style={{ borderRadius: '8px', padding: '8px 12px', fontSize: '13.5px', borderColor: '#d1d5db', cursor: 'pointer' }}
+              >
+                <span className={selectedPrice ? 'text-dark' : 'text-muted'}>
+                  {selectedPrice || 'Chọn khoảng giá'}
+                </span>
+              </div>
+
+              {/* Popover */}
+              {showPriceDropdown && (
+                <div
+                  className="card position-absolute shadow p-3 bg-white border"
+                  style={{ top: '100%', left: '12px', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
+                >
+                  <div className="d-flex align-items-center gap-2 mb-3">
+                    <div className="flex-grow-1">
+                      <div className="text-muted small mb-1" style={{ fontSize: '11px' }}>Thấp nhất</div>
+                      <input type="number" className="form-control form-control-sm text-center" placeholder="0" />
+                    </div>
+                    <div className="pt-3 text-muted fw-bold">→</div>
+                    <div className="flex-grow-1">
+                      <div className="text-muted small mb-1" style={{ fontSize: '11px' }}>Cao nhất</div>
+                      <input type="number" className="form-control form-control-sm text-center" placeholder="0" />
+                    </div>
+                  </div>
+
+                  <div className="fw-semibold text-dark small mb-2" style={{ fontSize: '13px' }}>Tất cả mức giá</div>
+                  {['Dưới 5 tỷ', '5 tới 10 tỷ', '10 tới 15 tỷ', '15 tới 20 tỷ', 'Trên 20 tỷ'].map((item) => (
+                    <div className="form-check py-1" key={item}>
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="bsPriceRadio"
+                        id={`price-${item}`}
+                        checked={selectedPrice === item}
+                        onChange={() => {
+                          setSelectedPrice(item);
+                          setShowPriceDropdown(false);
+                        }}
+                      />
+                      <label className="form-check-label small text-dark" htmlFor={`price-${item}`} style={{ fontSize: '13px' }}>
+                        {item}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-3 pt-2 border-top">
+          {/* Action buttons matching Frame 215 */}
+          <div className="d-flex justify-content-end align-items-center gap-2 mt-4">
             <button
               type="button"
-              className="btn btn-light btn-sm px-3 text-muted"
+              className="btn btn-sm px-4 fw-semibold"
               onClick={() => setShowAdvanced(false)}
+              style={{
+                backgroundColor: '#c2cad4',
+                color: '#334155',
+                borderRadius: '6px',
+                paddingTop: '8px',
+                paddingBottom: '8px',
+                fontSize: '13.5px',
+                border: 'none',
+              }}
             >
               Đóng
             </button>
-            <button type="button" className="btn btn-gradient-primary btn-sm px-4">
+            <button
+              type="button"
+              className="btn btn-sm px-4 fw-semibold text-white"
+              style={{
+                backgroundColor: '#0288d1',
+                borderRadius: '6px',
+                paddingTop: '8px',
+                paddingBottom: '8px',
+                fontSize: '13.5px',
+                border: 'none',
+              }}
+            >
               Tìm kiếm
             </button>
           </div>
