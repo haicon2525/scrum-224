@@ -3,7 +3,8 @@ import axiosClient from '../api/axiosClient';
 import type { User, AuthState } from '../types/auth';
 
 interface AuthContextType extends AuthState {
-  login: (username: string, password?: string) => Promise<boolean>;
+  login: (username: string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  loginDemo: () => void;
   logout: () => void;
 }
 
@@ -38,17 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthState((prev) => ({ ...prev, isLoading: false }));
   }, []);
 
-  const login = async (username: string, password: string = '123456'): Promise<boolean> => {
+  // Real login to backend endpoint POST /auth/login
+  const login = async (username: string, password: string = ''): Promise<{ success: boolean; message?: string }> => {
     try {
-      // Try real UAT Login endpoint: POST /auth/login
       const res: any = await axiosClient.post('/auth/login', {
         username: username.trim(),
         password,
       });
 
-      if (res && (res.code === 'SUCCESS' || res.data?.accessToken)) {
-        const tokenData = res.data || {};
-        const token = tokenData.accessToken || 'uat_token_' + Date.now();
+      if (res && res.code === 'SUCCESS' && res.data?.accessToken) {
+        const tokenData = res.data;
+        const token = tokenData.accessToken;
         const userObj: User = {
           id: tokenData.userId || 'usr_uat',
           username,
@@ -66,31 +67,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           token,
           isLoading: false,
         });
-        return true;
+        return { success: true };
       }
-      throw new Error(res?.message || 'Đăng nhập không thành công');
-    } catch {
-      // Fallback demo login so user can always evaluate the UI and Auth Guard
-      const fakeToken = 'mock_jwt_token_' + Date.now();
-      const demoUser: User = {
-        id: 'usr_demo',
-        username,
-        name: username.split('@')[0] || 'Chuyên viên Tư vấn',
-        role: 'AGENT',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+
+      return {
+        success: false,
+        message: res?.message || 'Đăng nhập không thành công',
       };
-
-      localStorage.setItem('access_token', fakeToken);
-      localStorage.setItem('auth_user', JSON.stringify(demoUser));
-
-      setAuthState({
-        isAuthenticated: true,
-        user: demoUser,
-        token: fakeToken,
-        isLoading: false,
-      });
-      return true;
+    } catch (err: any) {
+      const serverMessage = err.response?.data?.message || err.message || 'Lỗi kết nối máy chủ';
+      return {
+        success: false,
+        message: serverMessage,
+      };
     }
+  };
+
+  // Demo login for offline / quick inspection
+  const loginDemo = () => {
+    const fakeToken = 'mock_jwt_token_' + Date.now();
+    const demoUser: User = {
+      id: 'usr_demo',
+      username: 'demo.sales@vinhomes.vn',
+      name: 'Chuyên viên Tư vấn (Demo)',
+      role: 'AGENT',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    };
+
+    localStorage.setItem('access_token', fakeToken);
+    localStorage.setItem('auth_user', JSON.stringify(demoUser));
+
+    setAuthState({
+      isAuthenticated: true,
+      user: demoUser,
+      token: fakeToken,
+      isLoading: false,
+    });
   };
 
   const logout = async () => {
@@ -111,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout }}>
+    <AuthContext.Provider value={{ ...authState, login, loginDemo, logout }}>
       {children}
     </AuthContext.Provider>
   );

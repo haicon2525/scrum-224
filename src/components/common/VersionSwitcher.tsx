@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 export const VersionSwitcher: React.FC = () => {
   const location = useLocation();
-  const { isAuthenticated, user, logout, login } = useAuth();
+  const { isAuthenticated, user, logout, loginDemo } = useAuth();
   const isBootstrap = location.pathname.startsWith('/bootstrap');
 
   return (
@@ -103,7 +103,7 @@ export const VersionSwitcher: React.FC = () => {
               Chưa đăng nhập (Khóa API)
             </span>
             <button
-              onClick={() => login('admin@vinhomes.vn')}
+              onClick={() => loginDemo()}
               style={{
                 backgroundColor: '#16a34a',
                 border: 'none',

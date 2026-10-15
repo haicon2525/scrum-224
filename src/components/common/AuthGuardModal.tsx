@@ -2,26 +2,24 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const AuthGuardModal: React.FC = () => {
-  const { login } = useAuth();
-  const [username, setUsername] = useState('demo.sales@vinhomes.vn');
-  const [password, setPassword] = useState('123456');
+  const { login, loginDemo } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      setError('Vui lòng nhập tên đăng nhập hoặc email');
+      setError('Vui lòng nhập tên tài khoản hoặc email');
       return;
     }
     setLoading(true);
     setError('');
-    try {
-      await login(username, password);
-    } catch {
-      setError('Đăng nhập không thành công, vui lòng thử lại.');
-    } finally {
-      setLoading(false);
+    const res = await login(username, password);
+    setLoading(false);
+    if (!res.success) {
+      setError(res.message || 'Tên đăng nhập hoặc mật khẩu không đúng');
     }
   };
 
@@ -70,10 +68,10 @@ export const AuthGuardModal: React.FC = () => {
         </div>
 
         <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>
-          Yêu Cầu Xác Thực
+          Đăng Nhập Hệ Thống
         </h3>
-        <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '24px', lineHeight: 1.5 }}>
-          Bạn cần đăng nhập để truy cập dữ liệu bảng hàng thực tế của dự án <strong>Vinhomes Ocean Park 3</strong>.
+        <p style={{ fontSize: '13.5px', color: '#64748b', marginBottom: '20px', lineHeight: 1.5 }}>
+          Đăng nhập tài khoản hệ thống để kết nối API thực tế của dự án <strong>Vinhomes Ocean Park</strong>.
         </p>
 
         {error && (
@@ -84,16 +82,17 @@ export const AuthGuardModal: React.FC = () => {
               padding: '10px 14px',
               borderRadius: '8px',
               fontSize: '13px',
-              marginBottom: '18px',
+              marginBottom: '16px',
               textAlign: 'left',
+              border: '1px solid #fecaca',
             }}
           >
-            {error}
+            ⚠️ {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <label
               style={{
                 display: 'block',
@@ -103,13 +102,13 @@ export const AuthGuardModal: React.FC = () => {
                 marginBottom: '6px',
               }}
             >
-              Tài khoản / Email
+              Tài khoản / Email Backend
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="VD: sales@vinhomes.vn"
+              placeholder="Nhập username backend..."
               required
               style={{
                 width: '100%',
@@ -123,7 +122,7 @@ export const AuthGuardModal: React.FC = () => {
             />
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '18px' }}>
             <label
               style={{
                 display: 'block',
@@ -158,7 +157,7 @@ export const AuthGuardModal: React.FC = () => {
             disabled={loading}
             style={{
               width: '100%',
-              backgroundColor: '#2563eb',
+              background: 'linear-gradient(90deg, #1d4ed8 0%, #0284c7 100%)',
               color: '#ffffff',
               padding: '12px',
               borderRadius: '8px',
@@ -166,17 +165,36 @@ export const AuthGuardModal: React.FC = () => {
               fontSize: '15px',
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'background-color 0.2s',
               boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
             }}
           >
-            {loading ? 'Đang xác thực...' : 'Đăng nhập xem bảng hàng'}
+            {loading ? 'Đang xác thực qua API...' : 'Đăng nhập vào Backend'}
           </button>
         </form>
 
-        <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f1f5f9', fontSize: '12px', color: '#94a3b8' }}>
-          💡 Nhấn nút <strong>Đăng nhập</strong> để mở khóa dữ liệu mẫu và trải nghiệm API.
+        <div style={{ margin: '18px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
+          <span style={{ fontSize: '12px', color: '#94a3b8' }}>hoặc</span>
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
         </div>
+
+        <button
+          type="button"
+          onClick={loginDemo}
+          style={{
+            width: '100%',
+            backgroundColor: '#f8fafc',
+            color: '#0284c7',
+            padding: '10px',
+            borderRadius: '8px',
+            border: '1px solid #bae6fd',
+            fontSize: '13.5px',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
+          🚀 Đăng nhập nhanh (Chế độ Demo / Test giao diện)
+        </button>
       </div>
     </div>
   );
