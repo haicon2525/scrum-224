@@ -497,6 +497,22 @@ export const portalApi = {
       };
     }
   },
+
+  /**
+   * 6. Get Unit Detail
+   * Endpoint: GET /portal/units/detail?id={id}
+   */
+  async getUnitDetail(id: number | string): Promise<any> {
+    try {
+      const response: any = await axiosClient.get('/portal/units/detail', {
+        params: { id },
+      });
+      return response?.data || response;
+    } catch (error) {
+      console.warn('[portalApi.getUnitDetail] Error fetching unit detail:', error);
+      return null;
+    }
+  },
 };
 
 export default portalApi;
