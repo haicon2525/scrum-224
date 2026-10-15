@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 export const VersionSwitcher: React.FC = () => {
   const location = useLocation();
-  const { isAuthenticated, user, logout, loginDemo } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const isBootstrap = location.pathname.startsWith('/bootstrap');
 
   return (
@@ -100,22 +100,8 @@ export const VersionSwitcher: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ color: '#f87171', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f87171', display: 'inline-block' }}></span>
-              Chưa đăng nhập (Khóa API)
+              Chưa đăng nhập (Yêu cầu tài khoản UAT)
             </span>
-            <button
-              onClick={() => loginDemo()}
-              style={{
-                backgroundColor: '#16a34a',
-                border: 'none',
-                color: '#fff',
-                padding: '4px 8px',
-                borderRadius: '4px',
-                fontSize: '12px',
-                cursor: 'pointer',
-              }}
-            >
-              Đăng nhập mẫu
-            </button>
           </div>
         )}
       </div>

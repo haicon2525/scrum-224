@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const AuthGuardModal: React.FC = () => {
-  const { login, loginDemo } = useAuth();
+  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -108,7 +108,7 @@ export const AuthGuardModal: React.FC = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Nhập username backend..."
+              placeholder="Nhập email hoặc số điện thoại..."
               required
               style={{
                 width: '100%',
@@ -171,31 +171,9 @@ export const AuthGuardModal: React.FC = () => {
             {loading ? 'Đang xác thực qua API...' : 'Đăng nhập vào Backend'}
           </button>
         </form>
-
-        <div style={{ margin: '18px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
-          <span style={{ fontSize: '12px', color: '#94a3b8' }}>hoặc</span>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
-        </div>
-
-        <button
-          type="button"
-          onClick={loginDemo}
-          style={{
-            width: '100%',
-            backgroundColor: '#f8fafc',
-            color: '#0284c7',
-            padding: '10px',
-            borderRadius: '8px',
-            border: '1px solid #bae6fd',
-            fontSize: '13.5px',
-            fontWeight: 600,
-            cursor: 'pointer',
-          }}
-        >
-          🚀 Đăng nhập nhanh (Chế độ Demo / Test giao diện)
-        </button>
       </div>
     </div>
   );
 };
+
+export default AuthGuardModal;
