@@ -28,12 +28,24 @@ export function formatArea(area: number | null | undefined): string {
  * - Corner units with >= 2 directions joined with " - ".
  * - Example: ["Tây Bắc", "Bắc"] -> "Tây Bắc - Bắc"
  */
-export function formatDirections(directions: string[] | string | null | undefined): string {
+export function formatDirections(directions: any): string {
   if (!directions) return '-';
   if (Array.isArray(directions)) {
-    return directions.filter(Boolean).join(' - ') || '-';
+    const list = directions
+      .map((d: any) => {
+        if (!d) return '';
+        if (typeof d === 'object') {
+          return d.value || d.name || d.code || '';
+        }
+        return String(d).trim();
+      })
+      .filter(Boolean);
+    return list.join(' - ') || '-';
   }
-  return directions;
+  if (typeof directions === 'object' && directions !== null) {
+    return directions.value || directions.name || directions.code || '-';
+  }
+  return String(directions);
 }
 
 /**

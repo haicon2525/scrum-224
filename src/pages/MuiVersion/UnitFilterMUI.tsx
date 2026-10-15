@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import BusinessIcon from '@mui/icons-material/Business';
 import { portalApi, type ProjectItem, type PhaseItem, type MasterDataItem } from '../../api/portalApi';
 import type { UnitItem, UnitSearchParams, SortOptionValue } from '../../types/unit';
 import { UnitTable } from './UnitTable';
@@ -185,7 +184,7 @@ export const UnitFilterMUI: React.FC = () => {
       setError(null);
 
       const params: UnitSearchParams = {
-        projectId: selectedProjectId || undefined,
+        projectId: undefined,
         phaseId: phaseId !== 'ALL' ? phaseId : undefined,
         statusCode: statusCode !== 'ALL' ? statusCode : undefined,
         unitTypeCode: unitTypeCode !== 'ALL' ? unitTypeCode : undefined,
@@ -300,45 +299,7 @@ export const UnitFilterMUI: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: { xs: 2.5, md: 3.5 }, mb: 4 }}>
-      {/* Project Selector Bar (if projects are available) */}
-      {projects.length > 0 && (
-        <Paper
-          elevation={0}
-          sx={{
-            p: { xs: 1.5, md: 2 },
-            mb: 2.5,
-            borderRadius: '10px',
-            bgcolor: '#ffffff',
-            border: '1px solid #e2e8f0',
-            display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: { xs: 'stretch', sm: 'center' },
-            justifyContent: 'space-between',
-            gap: 1.5,
-          }}
-        >
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <BusinessIcon sx={{ color: '#0288d1', fontSize: 22 }} />
-            <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e293b' }}>
-              Dự án đang xem:
-            </Typography>
-          </Stack>
 
-          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 320 } }}>
-            <Select
-              value={selectedProjectId}
-              onChange={(e) => setSelectedProjectId(Number(e.target.value))}
-              sx={{ bgcolor: '#f8fafc', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600 }}
-            >
-              {projects.map((proj) => (
-                <MenuItem key={proj.id} value={proj.id}>
-                  {proj.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Paper>
-      )}
 
       {/* Title & Quick Controls Bar */}
       <Stack

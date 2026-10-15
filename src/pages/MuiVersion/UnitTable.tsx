@@ -196,7 +196,7 @@ export const UnitTable: React.FC<UnitTableProps> = ({
                     {/* Phân khu */}
                     <TableCell align="center" sx={{ py: 1 }}>
                       <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
-                        {unit.phaseName || `Phân khu ${unit.phaseId}`}
+                        {unit.phaseName || (unit.phaseId ? `Phân khu ${unit.phaseId}` : '-')}
                       </Typography>
                     </TableCell>
 
