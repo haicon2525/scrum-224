@@ -40,9 +40,13 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('auth_user');
-      window.dispatchEvent(new Event('auth:unauthorized'));
+      const token = localStorage.getItem('access_token');
+      // Only clear storage and trigger logout if this is a real expired token, not demo mode
+      if (token && token !== 'demo_mock_jwt_token_12345') {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('auth_user');
+        window.dispatchEvent(new Event('auth:unauthorized'));
+      }
     }
     return Promise.reject(error);
   }
