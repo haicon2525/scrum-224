@@ -59,12 +59,9 @@ export const BsHeroBanner: React.FC = () => {
         <img
           src="/figma-banner.png"
           alt="Siêu quần thể đô thị biển Vinhomes Ocean Park 2 & 3"
-          className="w-100 d-block"
+          className="w-100 h-auto d-block"
           style={{
             borderRadius: '16px',
-            objectFit: 'cover',
-            maxHeight: '360px',
-            minHeight: '180px',
           }}
         />
       </div>

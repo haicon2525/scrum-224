@@ -86,9 +86,12 @@ export const portalApi = {
   async getPhases(projectId: number | string): Promise<PhaseItem[]> {
     if (!projectId) return [];
     try {
-      const response: any = await axiosClient.get('/portal/phases/list', {
-        params: { projectId },
-      });
+      let response: any;
+      try {
+        response = await axiosClient.get('/admin/projects/list', { params: { projectId } });
+      } catch {
+        response = await axiosClient.get('/portal/phases/list', { params: { projectId } });
+      }
 
       const data = response?.data;
       if (Array.isArray(data)) return data;
@@ -177,25 +180,53 @@ export const portalApi = {
     const totalElements: number = resData?.totalElements ?? response?.totalElements ?? contentList.length;
     const totalPages: number = resData?.totalPages ?? response?.totalPages ?? Math.ceil(totalElements / pageSize);
 
-    const mappedUnits: UnitItem[] = contentList.map((item: any) => ({
-      id: item.id || item.unitId || Math.random(),
-      unitCode: item.unitCode || item.code || 'N/A',
-      projectId: item.projectId,
-      projectName: item.projectName || 'Dự án',
-      phaseId: item.phaseId,
-      phaseName: item.phaseName,
-      statusCode: item.statusCode || 'AVAILABLE',
-      statusName: item.statusName || (item.statusCode === 'SOLD' ? 'Đã Bán' : 'Còn Hàng'),
-      unitTypeCode: item.unitTypeCode || 'SHOPHOUSE',
-      unitTypeName: item.unitTypeName || item.unitType,
-      directionCode: item.directionCode,
-      directions: item.directions || item.direction || '-',
-      areaLand: item.areaLand || item.landArea || 0,
-      areaConstruction: item.areaConstruction || item.buildingArea || 0,
-      basePrice: item.basePrice || item.price || 0,
-      isHot: Boolean(item.isHot),
-      createdAt: item.createdAt || new Date().toISOString(),
-    }));
+    if (contentList.length > 0) {
+      console.log('[DEBUG Backend API] Sample unit item keys:', Object.keys(contentList[0]));
+      console.log('[DEBUG Backend API] Sample unit item data:', contentList[0]);
+      console.log('[DEBUG Backend API] Any item with isHot/hot?:', contentList.filter((x: any) => x.isHot || x.hot || x.isHotDeal || x.is_hot));
+    }
+
+    const mappedUnits: UnitItem[] = contentList.map((item: any) => {
+      // Đọc linh hoạt giá trị isHot từ backend (hỗ trợ boolean, 1, 'true', hot, isHotDeal...)
+      const isHot = Boolean(
+        item.isHot === true ||
+        item.isHot === 1 ||
+        item.isHot === 'true' ||
+        item.hot === true ||
+        item.isHotDeal === true ||
+        item.hotDeal === true ||
+        item.is_hot === true
+      );
+
+      return {
+        id: item.id || item.unitId || Math.random(),
+        unitCode: item.unitCode || item.code || 'N/A',
+        projectId: item.projectId,
+        projectName: item.projectName || 'Dự án',
+        phaseId: item.phaseId,
+        phaseName: item.phaseName,
+        statusCode: item.statusCode || 'AVAILABLE',
+        statusName: item.statusName || (item.statusCode === 'SOLD' ? 'Đã Bán' : 'Còn Hàng'),
+        unitTypeCode: item.unitTypeCode || 'SHOPHOUSE',
+        unitTypeName: item.unitTypeName || item.unitType,
+        directionCode: item.directionCode,
+        directions: item.directions || item.direction || '-',
+        areaLand: item.areaLand || item.landArea || 0,
+        areaConstruction: item.areaConstruction || item.buildingArea || 0,
+        basePrice: item.basePrice || item.price || 0,
+        isHot,
+        createdAt: item.createdAt || new Date().toISOString(),
+      };
+    });
+
+    // Mặc định: Luôn sắp xếp căn Hot (isHot === true) lên đầu bảng và sau đó theo ngày tạo mới nhất
+    if (!params.sort || params.sort === 'isHot:desc,createdAt:desc') {
+      mappedUnits.sort((a, b) => {
+        if (a.isHot && !b.isHot) return -1;
+        if (!a.isHot && b.isHot) return 1;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+    }
 
     return {
       data: mappedUnits,

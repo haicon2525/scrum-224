@@ -64,8 +64,9 @@ export const MuiHeroBanner: React.FC = () => {
         sx={{
           borderRadius: { xs: 3, md: 4 },
           overflow: 'hidden',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
           width: '100%',
+          bgcolor: '#ffffff',
         }}
       >
         <Box
@@ -74,10 +75,8 @@ export const MuiHeroBanner: React.FC = () => {
           alt="Siêu quần thể đô thị biển Vinhomes Ocean Park 2 & 3"
           sx={{
             width: '100%',
+            height: 'auto',
             display: 'block',
-            objectFit: 'cover',
-            maxHeight: 360,
-            minHeight: 180,
             borderRadius: { xs: 3, md: 4 },
           }}
         />

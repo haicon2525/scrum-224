@@ -156,7 +156,7 @@ export const UnitFilterMUI: React.FC = () => {
       setError(null);
 
       const params: UnitSearchParams = {
-        projectId: undefined,
+        projectId: undefined, // Để undefined để lấy toàn bộ quỹ căn mẫu trên môi trường UAT
         phaseId: phaseId !== 'ALL' ? phaseId : undefined,
         statusCode: statusCode !== 'ALL' ? statusCode : undefined,
         unitTypeCode: unitTypeCode !== 'ALL' ? unitTypeCode : undefined,
