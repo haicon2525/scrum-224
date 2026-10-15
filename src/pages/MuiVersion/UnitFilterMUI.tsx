@@ -46,6 +46,118 @@ const PRICE_PRESETS = [
   { id: 'above20', label: 'Trên 20 tỷ', min: '20', max: '' },
 ];
 
+// Preview rows displayed behind blur filter when user is not logged in (matching Figma frame)
+const BLUR_PREVIEW_UNITS: UnitItem[] = [
+  {
+    id: 1,
+    unitCode: 'PB19-19',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 1',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'SHOPHOUSE',
+    unitTypeName: 'Shophouse',
+    directionCode: 'SOUTHEAST',
+    directions: 'Đông Nam',
+    areaLand: 100,
+    areaConstruction: 500,
+    basePrice: 20200000000,
+    isHot: true,
+    createdAt: '2025-01-15T08:00:00Z',
+  },
+  {
+    id: 2,
+    unitCode: 'PB19-20',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 1',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'SHOPHOUSE',
+    unitTypeName: 'Shophouse',
+    directionCode: 'SOUTHEAST',
+    directions: 'Đông Nam',
+    areaLand: 100,
+    areaConstruction: 500,
+    basePrice: 20200000000,
+    isHot: true,
+    createdAt: '2025-01-14T09:30:00Z',
+  },
+  {
+    id: 3,
+    unitCode: 'PB19-21',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 1',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'SHOPHOUSE',
+    unitTypeName: 'Shophouse',
+    directionCode: 'EAST',
+    directions: 'Đông',
+    areaLand: 95,
+    areaConstruction: 480,
+    basePrice: 18500000000,
+    isHot: false,
+    createdAt: '2025-01-13T10:00:00Z',
+  },
+  {
+    id: 4,
+    unitCode: 'PB19-22',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 1',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'TOWNHOUSE',
+    unitTypeName: 'Liền Kề',
+    directionCode: 'SOUTH',
+    directions: 'Nam',
+    areaLand: 80,
+    areaConstruction: 320,
+    basePrice: 9500000000,
+    isHot: false,
+    createdAt: '2025-01-12T11:00:00Z',
+  },
+  {
+    id: 5,
+    unitCode: 'TD12-05',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 2',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'SEMI_DETACHED',
+    unitTypeName: 'Song Lập',
+    directionCode: 'NORTHEAST',
+    directions: 'Đông Bắc',
+    areaLand: 150,
+    areaConstruction: 420,
+    basePrice: 25000000000,
+    isHot: false,
+    createdAt: '2025-01-11T14:20:00Z',
+  },
+  {
+    id: 6,
+    unitCode: 'VT08-12',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseName: 'Phân khu 3',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'SHOPHOUSE',
+    unitTypeName: 'Shophouse',
+    directionCode: 'NORTH',
+    directions: 'Bắc',
+    areaLand: 120,
+    areaConstruction: 550,
+    basePrice: 22000000000,
+    isHot: false,
+    createdAt: '2025-01-10T16:00:00Z',
+  },
+];
+
 export const UnitFilterMUI: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -297,26 +409,45 @@ export const UnitFilterMUI: React.FC = () => {
     return preset ? preset.label : 'Chọn khoảng giá';
   };
 
+  // When not authenticated, show realistic preview units behind the blur filter
+  const displayUnits = !isAuthenticated && units.length === 0 ? BLUR_PREVIEW_UNITS : units;
+
   return (
-    <Container maxWidth="xl" sx={{ mt: { xs: 2.5, md: 3.5 }, mb: 4 }}>
-
-
-      {/* Title & Quick Controls Bar */}
-      <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        spacing={2}
+    <Container
+      maxWidth="xl"
+      sx={{
+        mt: { xs: 2.5, md: 3.5 },
+        mb: 4,
+        position: 'relative',
+        minHeight: !isAuthenticated ? 700 : 'auto',
+      }}
+    >
+      {/* Content wrapper with blur filter when unauthenticated */}
+      <Box
         sx={{
-          justifyContent: 'space-between',
-          alignItems: { xs: 'stretch', md: 'center' },
-          mb: 2,
+          filter: !isAuthenticated ? 'blur(8px)' : 'none',
+          opacity: !isAuthenticated ? 0.75 : 1,
+          pointerEvents: !isAuthenticated ? 'none' : 'auto',
+          userSelect: !isAuthenticated ? 'none' : 'auto',
+          transition: 'filter 0.3s ease, opacity 0.3s ease',
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.25rem', md: '1.5rem' } }}
+        {/* Title & Quick Controls Bar */}
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={2}
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: { xs: 'stretch', md: 'center' },
+            mb: 2,
+          }}
         >
-          BẢNG HÀNG
-        </Typography>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.25rem', md: '1.5rem' } }}
+          >
+            BẢNG HÀNG
+          </Typography>
 
         {/* Controls: Stacked on mobile, row on desktop */}
         <Stack
@@ -406,16 +537,18 @@ export const UnitFilterMUI: React.FC = () => {
             BỘ LỌC NÂNG CAO
           </Typography>
 
-          {/* 3 Columns x 2 Rows Grid matching Figma */}
+          {/* 6 Columns Grid matching Figma Image 1 */}
           <Box
             sx={{
               display: 'grid',
               gridTemplateColumns: {
                 xs: '1fr',
+                sm: 'repeat(2, 1fr)',
                 md: 'repeat(3, 1fr)',
+                lg: 'repeat(6, 1fr)',
               },
-              columnGap: 2.5,
-              rowGap: 2.5,
+              columnGap: 1.5,
+              rowGap: 2,
             }}
           >
             {/* ROW 1 - COL 1: Mã căn hộ */}
@@ -809,14 +942,14 @@ export const UnitFilterMUI: React.FC = () => {
             </Box>
           </Box>
 
-          {/* Action buttons (Frame 215: Đóng and Tìm kiếm) */}
+          {/* Action buttons (Ảnh 1: Đóng and Tìm kiếm căn giữa) */}
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
               gap: 1.5,
-              mt: 3,
+              mt: 2.5,
             }}
           >
             <Button
@@ -826,14 +959,14 @@ export const UnitFilterMUI: React.FC = () => {
                 textTransform: 'none',
                 borderRadius: '6px',
                 px: 3.5,
-                py: 0.9,
-                fontWeight: 600,
+                py: 0.8,
+                fontWeight: 500,
                 fontSize: '13.5px',
-                bgcolor: '#c2cad4',
+                bgcolor: '#f1f5f9',
                 color: '#334155',
                 boxShadow: 'none',
                 '&:hover': {
-                  bgcolor: '#b0b8c2',
+                  bgcolor: '#e2e8f0',
                   boxShadow: 'none',
                 },
               }}
@@ -847,16 +980,16 @@ export const UnitFilterMUI: React.FC = () => {
               sx={{
                 textTransform: 'none',
                 borderRadius: '6px',
-                px: 3.5,
-                py: 0.9,
+                px: 4,
+                py: 0.8,
                 fontWeight: 600,
                 fontSize: '13.5px',
-                bgcolor: '#0288d1',
+                background: 'linear-gradient(135deg, #1d4ed8 0%, #0099e5 100%)',
                 color: '#ffffff',
-                boxShadow: 'none',
+                boxShadow: '0 2px 8px rgba(29, 78, 216, 0.25)',
                 '&:hover': {
-                  bgcolor: '#0277bd',
-                  boxShadow: 'none',
+                  background: 'linear-gradient(135deg, #1e40af 0%, #0284c7 100%)',
+                  boxShadow: '0 4px 14px rgba(29, 78, 216, 0.35)',
                 },
               }}
             >
@@ -876,25 +1009,26 @@ export const UnitFilterMUI: React.FC = () => {
       {/* Responsive View Switcher: Desktop -> UnitTable, Mobile -> UnitListMobile */}
       {isMobile ? (
         <UnitListMobile
-          units={units}
+          units={displayUnits}
           isLoading={loading}
           page={page}
           totalPages={totalPages}
-          total={total}
+          total={total || displayUnits.length}
           onPageChange={handlePageChange}
         />
       ) : (
         <UnitTable
-          units={units}
+          units={displayUnits}
           isLoading={loading}
           page={page}
           totalPages={totalPages}
-          total={total}
+          total={total || displayUnits.length}
           onPageChange={handlePageChange}
         />
       )}
+      </Box>
 
-      {/* AuthGuard Modal if not authenticated */}
+      {/* AuthGuard Modal overlay if not authenticated (Exact 1:1 match with Figma Image 2) */}
       {!isAuthLoading && !isAuthenticated && <AuthGuardModal />}
     </Container>
   );

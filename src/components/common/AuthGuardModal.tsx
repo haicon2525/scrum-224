@@ -1,17 +1,34 @@
 import React, { useState } from 'react';
+import {
+  Box,
+  Card,
+  Typography,
+  TextField,
+  Button,
+  FormControlLabel,
+  Checkbox,
+  Link,
+  IconButton,
+  InputAdornment,
+  Alert,
+} from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const AuthGuardModal: React.FC = () => {
   const { login } = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('tranngochai367@gmail.com');
+  const [password, setPassword] = useState('haicon123');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      setError('Vui lòng nhập tên tài khoản hoặc email');
+      setError('Vui lòng nhập Email hoặc Số điện thoại');
       return;
     }
     setLoading(true);
@@ -19,160 +36,232 @@ export const AuthGuardModal: React.FC = () => {
     const res = await login(username, password);
     setLoading(false);
     if (!res.success) {
-      setError(res.message || 'Tên đăng nhập hoặc mật khẩu không đúng');
+      setError(res.message || 'Tài khoản hoặc mật khẩu không chính xác');
     }
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 1050,
+    <Box
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 50,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(15, 23, 42, 0.65)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        padding: '20px',
+        p: { xs: 2, sm: 3 },
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
       }}
     >
-      <div
-        style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '16px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+      <Card
+        elevation={0}
+        sx={{
           width: '100%',
-          maxWidth: '440px',
-          padding: '36px 32px',
+          maxWidth: 420,
+          borderRadius: '16px',
+          boxShadow: '0 20px 45px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+          p: { xs: 3, sm: 4 },
+          bgcolor: '#ffffff',
           textAlign: 'center',
           animation: 'fadeInUp 0.3s ease-out',
         }}
       >
-        <div
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            backgroundColor: '#eff6ff',
-            color: '#2563eb',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '28px',
-            margin: '0 auto 16px',
+        {/* Title & Subtitle exact 1:1 match with Figma */}
+        <Typography
+          variant="h6"
+          component="h2"
+          sx={{
+            fontWeight: 700,
+            color: '#1565c0',
+            fontSize: '20px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            mb: 0.5,
           }}
         >
-          🔒
-        </div>
+          ĐĂNG NHẬP
+        </Typography>
 
-        <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#1e293b', marginBottom: '8px' }}>
-          Đăng Nhập Hệ Thống
-        </h3>
-        <p style={{ fontSize: '13.5px', color: '#64748b', marginBottom: '20px', lineHeight: 1.5 }}>
-          Đăng nhập tài khoản hệ thống để kết nối API thực tế của dự án <strong>Vinhomes Ocean Park</strong>.
-        </p>
+        <Typography
+          sx={{
+            fontSize: '13px',
+            color: '#64748b',
+            mb: 3,
+          }}
+        >
+          Vui lòng đăng nhập để xem nội dung
+        </Typography>
 
         {error && (
-          <div
-            style={{
-              backgroundColor: '#fee2e2',
-              color: '#dc2626',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              marginBottom: '16px',
-              textAlign: 'left',
-              border: '1px solid #fecaca',
-            }}
-          >
-            ⚠️ {error}
-          </div>
+          <Alert severity="error" sx={{ mb: 2, fontSize: '13px', textAlign: 'left', borderRadius: '8px' }}>
+            {error}
+          </Alert>
         )}
 
-        <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
-          <div style={{ marginBottom: '14px' }}>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#334155',
-                marginBottom: '6px',
-              }}
-            >
-              Tài khoản / Email Backend
-            </label>
-            <input
-              type="text"
+        <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
+          {/* Email / Phone Field */}
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Email/ Số điện thoại"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Nhập email hoặc số điện thoại..."
               required
-              style={{
-                width: '100%',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box',
+              sx={{
+                bgcolor: '#ffffff',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                  fontSize: '13.5px',
+                  '& fieldset': { borderColor: '#d1d5db' },
+                  '&:hover fieldset': { borderColor: '#1565c0' },
+                  '&.Mui-focused fieldset': { borderColor: '#1565c0' },
+                },
               }}
             />
-          </div>
+          </Box>
 
-          <div style={{ marginBottom: '18px' }}>
-            <label
-              style={{
-                display: 'block',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#334155',
-                marginBottom: '6px',
-              }}
-            >
-              Mật khẩu
-            </label>
-            <input
-              type="password"
+          {/* Password Field */}
+          <Box sx={{ mb: 1.5 }}>
+            <TextField
+              fullWidth
+              size="small"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Mật khẩu"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
               required
-              style={{
-                width: '100%',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                fontSize: '14px',
-                outline: 'none',
-                boxSizing: 'border-box',
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        size="small"
+                        sx={{ color: '#94a3b8' }}
+                      >
+                        {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              sx={{
+                bgcolor: '#ffffff',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                  fontSize: '13.5px',
+                  '& fieldset': { borderColor: '#d1d5db' },
+                  '&:hover fieldset': { borderColor: '#1565c0' },
+                  '&.Mui-focused fieldset': { borderColor: '#1565c0' },
+                },
               }}
             />
-          </div>
+          </Box>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              background: 'linear-gradient(90deg, #1d4ed8 0%, #0284c7 100%)',
-              color: '#ffffff',
-              padding: '12px',
-              borderRadius: '8px',
-              border: 'none',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+          {/* Options: Remember Me & Forgot Password */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mb: 2.5,
             }}
           >
-            {loading ? 'Đang xác thực qua API...' : 'Đăng nhập vào Backend'}
-          </button>
-        </form>
-      </div>
-    </div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  size="small"
+                  sx={{
+                    color: '#94a3b8',
+                    p: 0.5,
+                    '&.Mui-checked': { color: '#1565c0' },
+                  }}
+                />
+              }
+              label={
+                <Typography sx={{ fontSize: '12.5px', color: '#475569' }}>
+                  Đăng nhập tự động
+                </Typography>
+              }
+              sx={{ m: 0 }}
+            />
+
+            <Link
+              href="#forgot-password"
+              onClick={(e) => {
+                e.preventDefault();
+                alert('Vui lòng liên hệ quản trị viên hệ thống để cấp lại mật khẩu.');
+              }}
+              sx={{
+                fontSize: '12.5px',
+                color: '#1565c0',
+                textDecoration: 'none',
+                fontWeight: 500,
+                '&:hover': { textDecoration: 'underline' },
+              }}
+            >
+              Quên mật khẩu?
+            </Link>
+          </Box>
+
+          {/* Login Button with Vibrant Blue-Cyan Gradient */}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            sx={{
+              background: 'linear-gradient(90deg, #1d4ed8 0%, #0099e5 100%)',
+              color: '#ffffff',
+              py: 1.1,
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: 600,
+              textTransform: 'none',
+              boxShadow: '0 4px 14px rgba(29, 78, 216, 0.35)',
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #1e40af 0%, #0284c7 100%)',
+                boxShadow: '0 6px 18px rgba(29, 78, 216, 0.45)',
+              },
+            }}
+          >
+            {loading ? 'Đang xác thực...' : 'Đăng nhập'}
+          </Button>
+
+          {/* Register Footer Link */}
+          <Box sx={{ mt: 2.5, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '13px', color: '#64748b' }}>
+              Bạn chưa có tài khoản?{' '}
+              <Link
+                href="#register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert('Hệ thống đang mở đăng ký tài khoản tự động.');
+                }}
+                underline="none"
+                sx={{
+                  color: '#1565c0',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  '&:hover': { textDecoration: 'underline' },
+                }}
+              >
+                Đăng ký ngay
+              </Link>
+            </Typography>
+          </Box>
+        </Box>
+      </Card>
+    </Box>
   );
 };
 
