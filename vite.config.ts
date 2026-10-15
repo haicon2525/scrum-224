@@ -10,6 +10,13 @@ export default defineConfig({
         target: 'https://api-uat.vinhomes.biz.vn',
         changeOrigin: true,
         secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, _req, _res) => {
+            // Rewrite Origin and Referer to match backend domain so Spring Security doesn't block with 403 Invalid CORS request
+            proxyReq.setHeader('Origin', 'https://api-uat.vinhomes.biz.vn');
+            proxyReq.setHeader('Referer', 'https://api-uat.vinhomes.biz.vn/');
+          });
+        },
       },
     },
   },
