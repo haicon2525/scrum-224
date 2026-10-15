@@ -439,21 +439,33 @@ export const UnitFilterMUI: React.FC = () => {
           sx={{
             justifyContent: 'space-between',
             alignItems: { xs: 'stretch', md: 'center' },
+            width: '100%',
             mb: 2,
           }}
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.25rem', md: '1.5rem' } }}
+            sx={{
+              fontWeight: 800,
+              color: 'primary.main',
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
           >
             BẢNG HÀNG
           </Typography>
 
-        {/* Controls: Stacked on mobile, row on desktop */}
+        {/* Controls: Stacked on mobile, pushed to far right on desktop */}
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           spacing={1.5}
-          sx={{ alignItems: 'stretch', width: { xs: '100%', md: 'auto' } }}
+          sx={{
+            alignItems: 'stretch',
+            justifyContent: 'flex-end',
+            width: { xs: '100%', md: 'auto' },
+            ml: { md: 'auto' },
+          }}
         >
           {/* Sort selector */}
           <FormControl size="small" sx={{ width: { xs: '100%', md: 200 } }}>

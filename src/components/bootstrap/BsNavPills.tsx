@@ -14,7 +14,7 @@ export const BsNavPills: React.FC = () => {
   const [activeTab, setActiveTab] = useState('units');
 
   return (
-    <div className="container-fluid px-3 px-md-4 mt-3">
+    <div className="bs-main-container mt-3">
       <div
         className="nav-pills-bar overflow-auto shadow-sm"
         style={{

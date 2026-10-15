@@ -59,52 +59,28 @@ export const MuiHeroBanner: React.FC = () => {
         </Button>
       </Stack>
 
-      {/* Banner */}
+      {/* Banner using exact Figma Banner image */}
       <Box
         sx={{
-          height: 'clamp(190px, 28vw, 360px)',
           borderRadius: { xs: 3, md: 4 },
-          position: 'relative',
           overflow: 'hidden',
-          backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%), url("https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
           boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+          width: '100%',
         }}
       >
-        <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', p: { xs: 2, md: 4 }, textAlign: 'center' }}>
-          <Typography
-            sx={{
-              color: '#ffffff',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-              fontSize: 'clamp(13px, 2vw, 18px)',
-            }}
-          >
-            Siêu quần thể đô thị biển
-          </Typography>
-          <Typography
-            sx={{
-              color: '#facc15',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              textShadow: '0 3px 8px rgba(0,0,0,0.7)',
-              fontSize: 'clamp(18px, 3.5vw, 32px)',
-              mt: 0.5,
-            }}
-          >
-            VINHOMES OCEAN PARK 2 & 3
-          </Typography>
-        </Box>
-
-        {/* Carousel indicators */}
-        <Stack direction="row" spacing={1} sx={{ position: 'absolute', bottom: { xs: 10, md: 16 }, left: '50%', transform: 'translateX(-50%)' }}>
-          <Box sx={{ width: 24, height: 5, borderRadius: 3, bgcolor: 'primary.main' }} />
-          <Box sx={{ width: 6, height: 5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.7)' }} />
-          <Box sx={{ width: 6, height: 5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.7)' }} />
-          <Box sx={{ width: 6, height: 5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.7)' }} />
-        </Stack>
+        <Box
+          component="img"
+          src="/figma-banner.png"
+          alt="Siêu quần thể đô thị biển Vinhomes Ocean Park 2 & 3"
+          sx={{
+            width: '100%',
+            display: 'block',
+            objectFit: 'cover',
+            maxHeight: 360,
+            minHeight: 180,
+            borderRadius: { xs: 3, md: 4 },
+          }}
+        />
       </Box>
     </Container>
   );

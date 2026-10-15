@@ -5,7 +5,7 @@ export const BsHeader: React.FC = () => {
 
   return (
     <header className="bg-white border-bottom py-2 px-3 px-md-4 sticky-top shadow-sm">
-      <div className="container-fluid d-flex justify-content-between align-items-center">
+      <div className="bs-main-container d-flex justify-content-between align-items-center">
         {/* Logo 3 bars according to Figma */}
         <div className="d-flex align-items-center gap-2">
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none">

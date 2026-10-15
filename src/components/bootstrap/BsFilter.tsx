@@ -8,19 +8,34 @@ export const BsFilter: React.FC = () => {
   const [selectedPrice, setSelectedPrice] = useState('');
 
   return (
-    <div className="container-fluid px-3 px-md-4 mt-3 mt-md-4">
-      {/* Title & Controls Bar */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
-        <h3 className="fw-bold text-primary mb-0" style={{ fontSize: '20px' }}>
+    <div className="bs-main-container mt-3 mt-md-4">
+      {/* Title & Controls Bar: BẢNG HÀNG on far left, Controls on far right */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center w-100 gap-3 mb-3">
+        <h2
+          className="fw-bold mb-0 text-uppercase text-nowrap flex-shrink-0"
+          style={{
+            fontSize: '24px',
+            color: '#1565c0',
+            letterSpacing: '0.2px',
+            whiteSpace: 'nowrap',
+          }}
+        >
           BẢNG HÀNG
-        </h3>
+        </h2>
 
-        {/* Controls: stacked full-width on mobile, side-by-side on desktop */}
-        <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100 w-md-auto">
+        {/* Controls: aligned flush to the right */}
+        <div className="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 bs-filter-controls">
           {/* Sort dropdown */}
           <select
-            className="form-select form-select-sm shadow-none w-100"
-            style={{ minWidth: '190px', borderRadius: '8px', fontSize: '13px', padding: '8px 12px' }}
+            className="form-select form-select-sm shadow-none"
+            style={{
+              width: '205px',
+              height: '38px',
+              borderRadius: '6px',
+              fontSize: '13px',
+              padding: '6px 32px 6px 12px',
+              borderColor: '#cbd5e1',
+            }}
             defaultValue="default"
           >
             <option value="default">Sắp xếp theo mặc định</option>
@@ -30,10 +45,17 @@ export const BsFilter: React.FC = () => {
             <option value="priceDesc">Giá giảm dần</option>
           </select>
 
-          {/* Status dropdown */}
+          {/* Status dropdown: 168px exactly as annotated in Figma */}
           <select
-            className="form-select form-select-sm shadow-none w-100"
-            style={{ minWidth: '150px', borderRadius: '8px', fontSize: '13px', padding: '8px 12px' }}
+            className="form-select form-select-sm shadow-none"
+            style={{
+              width: '168px',
+              height: '38px',
+              borderRadius: '6px',
+              fontSize: '13px',
+              padding: '6px 32px 6px 12px',
+              borderColor: '#cbd5e1',
+            }}
             defaultValue="all"
           >
             <option value="all">Tất cả trạng thái</option>
@@ -45,11 +67,21 @@ export const BsFilter: React.FC = () => {
           {/* Filter button */}
           <button
             type="button"
-            className="btn btn-gradient-primary btn-sm d-flex align-items-center justify-content-center gap-1 px-3 py-2 w-100 w-md-auto shadow-sm"
+            className="btn btn-sm d-inline-flex align-items-center justify-content-center shadow-sm text-white flex-shrink-0"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            style={{ borderRadius: '8px' }}
+            style={{
+              background: 'linear-gradient(90deg, #1d4ed8 0%, #0099e5 100%)',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '13px',
+              fontWeight: 600,
+              height: '38px',
+              padding: '0 18px',
+              gap: '8px',
+              minWidth: '100px',
+            }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
             </svg>
             <span>Bộ lọc</span>
@@ -64,10 +96,10 @@ export const BsFilter: React.FC = () => {
             BỘ LỌC NÂNG CAO
           </h5>
 
-          {/* 3 columns x 2 rows */}
-          <div className="row g-3">
+          {/* 6 Columns Grid matching Figma Image 1 */}
+          <div className="row g-2 g-md-3">
             {/* ROW 1 - COL 1: Mã căn hộ */}
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Mã căn hộ</label>
               <input
                 type="text"
@@ -78,7 +110,7 @@ export const BsFilter: React.FC = () => {
             </div>
 
             {/* ROW 1 - COL 2: Phân khu */}
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Phân khu</label>
               <select
                 className="form-select form-select-sm"
@@ -93,7 +125,7 @@ export const BsFilter: React.FC = () => {
             </div>
 
             {/* ROW 1 - COL 3: Loại căn */}
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Loại căn</label>
               <select
                 className="form-select form-select-sm"
@@ -108,7 +140,7 @@ export const BsFilter: React.FC = () => {
             </div>
 
             {/* ROW 2 - COL 1: Hướng đất */}
-            <div className="col-12 col-md-4">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Hướng đất</label>
               <select
                 className="form-select form-select-sm"
@@ -125,7 +157,7 @@ export const BsFilter: React.FC = () => {
             </div>
 
             {/* ROW 2 - COL 2: Diện tích */}
-            <div className="col-12 col-md-4 position-relative">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2 position-relative">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Diện tích</label>
               <div
                 className="form-select form-select-sm d-flex align-items-center justify-content-between cursor-pointer"
@@ -144,7 +176,7 @@ export const BsFilter: React.FC = () => {
               {showAreaDropdown && (
                 <div
                   className="card position-absolute shadow p-3 bg-white border"
-                  style={{ top: '100%', left: '12px', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
+                  style={{ top: '100%', left: '0', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-3">
                     <div className="flex-grow-1">
@@ -182,7 +214,7 @@ export const BsFilter: React.FC = () => {
             </div>
 
             {/* ROW 2 - COL 3: Khoảng giá */}
-            <div className="col-12 col-md-4 position-relative">
+            <div className="col-12 col-sm-6 col-md-4 col-lg-2 position-relative">
               <label className="form-label small fw-semibold text-dark mb-1" style={{ fontSize: '13px' }}>Khoảng giá</label>
               <div
                 className="form-select form-select-sm d-flex align-items-center justify-content-between cursor-pointer"
@@ -201,7 +233,7 @@ export const BsFilter: React.FC = () => {
               {showPriceDropdown && (
                 <div
                   className="card position-absolute shadow p-3 bg-white border"
-                  style={{ top: '100%', left: '12px', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
+                  style={{ top: '100%', left: '0', zIndex: 1050, width: '280px', borderRadius: '10px', marginTop: '6px' }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-3">
                     <div className="flex-grow-1">
@@ -239,14 +271,14 @@ export const BsFilter: React.FC = () => {
             </div>
           </div>
 
-          {/* Action buttons matching Frame 215 */}
-          <div className="d-flex justify-content-end align-items-center gap-2 mt-4">
+          {/* Action buttons matching Frame 215 & centered like Image 1 */}
+          <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
             <button
               type="button"
               className="btn btn-sm px-4 fw-semibold"
               onClick={() => setShowAdvanced(false)}
               style={{
-                backgroundColor: '#c2cad4',
+                backgroundColor: '#f1f5f9',
                 color: '#334155',
                 borderRadius: '6px',
                 paddingTop: '8px',
@@ -261,12 +293,13 @@ export const BsFilter: React.FC = () => {
               type="button"
               className="btn btn-sm px-4 fw-semibold text-white"
               style={{
-                backgroundColor: '#0288d1',
+                background: 'linear-gradient(135deg, #1d4ed8 0%, #0099e5 100%)',
                 borderRadius: '6px',
                 paddingTop: '8px',
                 paddingBottom: '8px',
                 fontSize: '13.5px',
                 border: 'none',
+                boxShadow: '0 2px 8px rgba(29, 78, 216, 0.25)',
               }}
             >
               Tìm kiếm

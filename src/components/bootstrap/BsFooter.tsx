@@ -3,7 +3,7 @@ import React from 'react';
 export const BsFooter: React.FC = () => {
   return (
     <footer className="footer-gradient text-white mt-auto pt-4 pt-md-5 pb-3">
-      <div className="container-fluid px-3 px-md-5">
+      <div className="bs-main-container">
         <div className="row g-4 align-items-start">
           {/* Company info */}
           <div className="col-12 col-md-5">

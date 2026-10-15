@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { UnitDetailModal } from '../../pages/MuiVersion/UnitDetailModal';
+import { UnitMapModal } from '../../pages/MuiVersion/UnitMapModal';
 
 interface StaticUnitRow {
   id: number;
@@ -27,55 +29,124 @@ const STATIC_UNITS: StaticUnitRow[] = [
 ];
 
 export const BsUnitTable: React.FC = () => {
+  const [selectedUnit, setSelectedUnit] = useState<any | null>(null);
+  const [mapUnit, setMapUnit] = useState<any | null>(null);
+
+  const handleOpenDetail = (item: StaticUnitRow) => {
+    setSelectedUnit({
+      id: item.id,
+      unitCode: item.unitCode,
+      projectName: 'Vinhomes Ocean Park 3',
+      phaseName: item.phase,
+      statusName: item.statusText,
+      unitTypeName: item.type,
+      directions: item.direction,
+      areaLand: 100,
+      areaConstruction: 500,
+      basePrice: 20200000000,
+      isHot: item.isHot,
+    });
+  };
+
+  const handleOpenMap = (item: StaticUnitRow) => {
+    setMapUnit({
+      id: item.id,
+      unitCode: item.unitCode,
+      projectName: 'Vinhomes Ocean Park 3',
+      phaseName: item.phase,
+      statusName: item.statusText,
+      unitTypeName: item.type,
+      directions: item.direction,
+      basePrice: 20200000000,
+      areaLand: 100,
+    });
+  };
+
   return (
-    <div className="container-fluid px-3 px-md-4">
-      <div className="bg-white rounded-3 shadow-sm overflow-hidden mb-4 border border-light">
+    <div className="bs-main-container">
+      <div className="bg-white rounded-3 shadow-sm overflow-hidden mb-4 border" style={{ borderColor: '#e2e8f0' }}>
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0 text-center">
-            <thead className="table-light">
+            <thead style={{ backgroundColor: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
               <tr>
-                <th style={{ width: '70px' }}></th>
-                <th className="text-primary fw-bold" style={{ fontSize: '13px' }}>Mã căn</th>
-                <th className="text-primary fw-bold" style={{ fontSize: '13px' }}>Giá bán</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Loại hình</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>DT đất</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>DT xây dựng</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Hướng</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Phân khu</th>
-                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Tình trạng</th>
+                <th style={{ width: '65px', padding: '12px 6px' }}></th>
+                <th className="fw-bold text-nowrap" style={{ fontSize: '13px', color: '#1565c0' }}>Mã căn</th>
+                <th className="fw-bold text-nowrap" style={{ fontSize: '13px', color: '#1565c0' }}>Giá bán</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>Loại hình</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>DT đất</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>DT xây dựng</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>Hướng</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>Phân khu</th>
+                <th className="fw-bold text-nowrap d-none d-md-table-cell" style={{ fontSize: '13px', color: '#1565c0' }}>Tình trạng</th>
               </tr>
             </thead>
             <tbody>
               {STATIC_UNITS.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                   {/* Hotdeal & Pin icons */}
-                  <td>
-                    <div className="d-flex align-items-center justify-content-center gap-1">
+                  <td style={{ padding: '10px 4px' }}>
+                    <div className="d-flex align-items-center justify-content-center gap-1.5">
                       {item.isHot ? (
-                        <span title="Hotdeal" style={{ color: '#ef4444', fontSize: '15px' }}>🔥</span>
+                        <span
+                          title="Căn Hot Deal"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            backgroundColor: '#fee2e2',
+                            color: '#ef4444',
+                            fontSize: '12px',
+                          }}
+                        >
+                          🔥
+                        </span>
                       ) : (
-                        <span style={{ width: '15px', display: 'inline-block' }}></span>
+                        <span style={{ width: '20px', display: 'inline-block' }}></span>
                       )}
-                      <span title="Xem vị trí" style={{ color: '#3b82f6', fontSize: '15px', cursor: 'pointer' }}>📍</span>
+                      <span
+                        title="Xem vị trí trên bản đồ"
+                        onClick={() => handleOpenMap(item)}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '22px',
+                          height: '22px',
+                          color: '#2563eb',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        📍
+                      </span>
                     </div>
                   </td>
 
                   {/* Unit Code Badge */}
                   <td>
                     <span
-                      className={`badge fw-bold px-2 px-md-3 py-2 ${
+                      onClick={() => handleOpenDetail(item)}
+                      className={`badge fw-bold px-2 px-md-3 py-1.5 cursor-pointer ${
                         item.status === 'sold'
                           ? 'badge-unit-sold'
                           : 'badge-unit-blue'
                       }`}
-                      style={{ fontSize: '12px' }}
+                      style={{
+                        fontSize: '12.5px',
+                        cursor: 'pointer',
+                        letterSpacing: '0.2px',
+                      }}
+                      title="Xem chi tiết căn"
                     >
                       {item.unitCode}
                     </span>
                   </td>
 
                   {/* Price */}
-                  <td className="fw-semibold text-secondary" style={{ fontSize: '13px' }}>
+                  <td className="fw-semibold" style={{ fontSize: '13px', color: '#334155' }}>
                     {item.price}
                   </td>
 
@@ -90,6 +161,7 @@ export const BsUnitTable: React.FC = () => {
                   <td className="d-none d-md-table-cell">
                     <span
                       className={item.status === 'sold' ? 'status-badge-sold' : 'status-badge-available'}
+                      style={{ fontSize: '12px', padding: '4px 10px' }}
                     >
                       {item.statusText}
                     </span>
@@ -101,12 +173,12 @@ export const BsUnitTable: React.FC = () => {
         </div>
 
         {/* Responsive Pagination matching Figma */}
-        <div className="p-3 border-top">
+        <div className="p-3 border-top" style={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0' }}>
           {/* Desktop Pagination Layout */}
           <div className="d-none d-md-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center gap-2 small text-muted">
               <span>Trang</span>
-              <select className="form-select form-select-sm" style={{ width: '65px' }} defaultValue="1">
+              <select className="form-select form-select-sm" style={{ width: '65px', borderRadius: '6px' }} defaultValue="1">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -115,39 +187,39 @@ export const BsUnitTable: React.FC = () => {
             </div>
 
             <nav aria-label="Page navigation">
-              <ul className="pagination pagination-sm mb-0">
-                <li className="page-item disabled"><span className="page-link">«</span></li>
-                <li className="page-item disabled"><span className="page-link">&lt;</span></li>
-                <li className="page-item active"><span className="page-link">1</span></li>
-                <li className="page-item"><span className="page-link">2</span></li>
-                <li className="page-item"><span className="page-link">3</span></li>
-                <li className="page-item disabled"><span className="page-link">...</span></li>
-                <li className="page-item"><span className="page-link">10</span></li>
-                <li className="page-item"><span className="page-link">&gt;</span></li>
-                <li className="page-item"><span className="page-link">»</span></li>
+              <ul className="pagination pagination-sm mb-0 gap-1">
+                <li className="page-item disabled"><span className="page-link rounded">«</span></li>
+                <li className="page-item disabled"><span className="page-link rounded">&lt;</span></li>
+                <li className="page-item active"><span className="page-link rounded bg-primary border-primary">1</span></li>
+                <li className="page-item"><span className="page-link rounded text-dark">2</span></li>
+                <li className="page-item"><span className="page-link rounded text-dark">3</span></li>
+                <li className="page-item disabled"><span className="page-link rounded border-0">...</span></li>
+                <li className="page-item"><span className="page-link rounded text-dark">10</span></li>
+                <li className="page-item"><span className="page-link rounded text-dark">&gt;</span></li>
+                <li className="page-item"><span className="page-link rounded text-dark">»</span></li>
               </ul>
             </nav>
           </div>
 
-          {/* Mobile Pagination Layout (Buttons top, selector bottom) */}
+          {/* Mobile Pagination Layout */}
           <div className="d-flex d-md-none flex-column align-items-center gap-2">
             <nav aria-label="Page navigation">
-              <ul className="pagination pagination-sm mb-0">
-                <li className="page-item disabled"><span className="page-link px-2">«</span></li>
-                <li className="page-item disabled"><span className="page-link px-2">&lt;</span></li>
-                <li className="page-item active"><span className="page-link px-2">1</span></li>
-                <li className="page-item"><span className="page-link px-2">2</span></li>
-                <li className="page-item"><span className="page-link px-2">3</span></li>
-                <li className="page-item disabled"><span className="page-link px-1">...</span></li>
-                <li className="page-item"><span className="page-link px-2">10</span></li>
-                <li className="page-item"><span className="page-link px-2">&gt;</span></li>
-                <li className="page-item"><span className="page-link px-2">»</span></li>
+              <ul className="pagination pagination-sm mb-0 gap-1">
+                <li className="page-item disabled"><span className="page-link px-2 rounded">«</span></li>
+                <li className="page-item disabled"><span className="page-link px-2 rounded">&lt;</span></li>
+                <li className="page-item active"><span className="page-link px-2 rounded bg-primary border-primary">1</span></li>
+                <li className="page-item"><span className="page-link px-2 rounded text-dark">2</span></li>
+                <li className="page-item"><span className="page-link px-2 rounded text-dark">3</span></li>
+                <li className="page-item disabled"><span className="page-link px-1 rounded border-0">...</span></li>
+                <li className="page-item"><span className="page-link px-2 rounded text-dark">10</span></li>
+                <li className="page-item"><span className="page-link px-2 rounded text-dark">&gt;</span></li>
+                <li className="page-item"><span className="page-link px-2 rounded text-dark">»</span></li>
               </ul>
             </nav>
 
             <div className="d-flex align-items-center gap-2 small text-muted mt-1">
               <span>Trang</span>
-              <select className="form-select form-select-sm" style={{ width: '60px', padding: '2px 6px' }} defaultValue="1">
+              <select className="form-select form-select-sm" style={{ width: '60px', padding: '2px 6px', borderRadius: '6px' }} defaultValue="1">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -157,6 +229,26 @@ export const BsUnitTable: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Unit Detail Modal */}
+      <UnitDetailModal
+        open={Boolean(selectedUnit)}
+        unit={selectedUnit}
+        onClose={() => setSelectedUnit(null)}
+        onOpenMap={(u) => {
+          setSelectedUnit(null);
+          setMapUnit(u);
+        }}
+      />
+
+      {/* Unit Map Floorplan Modal */}
+      <UnitMapModal
+        open={Boolean(mapUnit)}
+        unit={mapUnit}
+        onClose={() => setMapUnit(null)}
+      />
     </div>
   );
 };
+
+export default BsUnitTable;
