@@ -7,7 +7,6 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   Button,
   TextField,
   Collapse,
@@ -16,8 +15,9 @@ import {
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { masterDataApi } from '../../api/masterDataApi';
-import type { MasterDataItem, ProjectItem } from '../../types/masterData';
+import type { MasterDataItem } from '../../types/masterData';
 import type { UnitSearchParams, SortOptionValue } from '../../types/unit';
 
 interface MuiUnitFilterProps {
@@ -25,16 +25,22 @@ interface MuiUnitFilterProps {
   isLoading?: boolean;
 }
 
-export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoading }) => {
-  const [showAdvanced, setShowAdvanced] = useState(false);
+const DEFAULT_PHASES = [
+  { id: 1, name: 'Phân khu 1' },
+  { id: 2, name: 'Phân khu 2' },
+  { id: 3, name: 'Phân khu 3' },
+  { id: 4, name: 'Phân khu 4' },
+];
 
-  // Master data states
+export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoading }) => {
+  const [showAdvanced, setShowAdvanced] = useState(true);
+
+  // Master data lists
   const [statuses, setStatuses] = useState<MasterDataItem[]>([]);
   const [unitTypes, setUnitTypes] = useState<MasterDataItem[]>([]);
   const [directions, setDirections] = useState<MasterDataItem[]>([]);
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
 
-  // Filter form state
+  // Filter criteria states
   const [sort, setSort] = useState<SortOptionValue>('isHot:desc,createdAt:desc');
   const [statusCode, setStatusCode] = useState<string>('ALL');
   const [unitCode, setUnitCode] = useState<string>('');
@@ -47,16 +53,14 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
   useEffect(() => {
     const fetchMasterData = async () => {
       try {
-        const [stList, utList, dirList, projList] = await Promise.all([
+        const [stList, utList, dirList] = await Promise.all([
           masterDataApi.getByGroupCode('UNIT_STATUS'),
           masterDataApi.getByGroupCode('UNIT_TYPE'),
           masterDataApi.getByGroupCode('DIRECTION'),
-          masterDataApi.getProjects(),
         ]);
         setStatuses(stList);
         setUnitTypes(utList);
         setDirections(dirList);
-        setProjects(projList);
       } catch (err) {
         console.error('Failed to load master data:', err);
       }
@@ -65,46 +69,73 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
     fetchMasterData();
   }, []);
 
-  const handleApplyFilter = () => {
-    const params: UnitSearchParams = {
+  // Helper to build search params from current state
+  const buildSearchParams = (overrides?: Partial<UnitSearchParams>): UnitSearchParams => {
+    let minArea: number | undefined;
+    let maxArea: number | undefined;
+    if (areaRange === '<100') {
+      maxArea = 100;
+    } else if (areaRange === '100-200') {
+      minArea = 100;
+      maxArea = 200;
+    } else if (areaRange === '>200') {
+      minArea = 200;
+    }
+
+    let minPrice: number | undefined;
+    let maxPrice: number | undefined;
+    if (priceRange === '<10') {
+      maxPrice = 10000000000;
+    } else if (priceRange === '10-20') {
+      minPrice = 10000000000;
+      maxPrice = 20000000000;
+    } else if (priceRange === '>20') {
+      minPrice = 20000000000;
+    }
+
+    return {
       sort,
       statusCode: statusCode !== 'ALL' ? statusCode : undefined,
       unitCode: unitCode.trim() || undefined,
       phaseId: phaseId !== 'ALL' ? phaseId : undefined,
       unitTypeCode: unitTypeCode !== 'ALL' ? unitTypeCode : undefined,
       directionCode: directionCode !== 'ALL' ? directionCode : undefined,
+      minAreaLand: minArea,
+      maxAreaLand: maxArea,
+      minBasePrice: minPrice,
+      maxBasePrice: maxPrice,
       page: 1,
+      ...overrides,
     };
-    onSearch(params);
+  };
+
+  const handleApplyFilter = () => {
+    onSearch(buildSearchParams());
+  };
+
+  const handleResetFilter = () => {
+    setUnitCode('');
+    setPhaseId('ALL');
+    setUnitTypeCode('ALL');
+    setDirectionCode('ALL');
+    setAreaRange('ALL');
+    setPriceRange('ALL');
+    onSearch({
+      sort,
+      statusCode: statusCode !== 'ALL' ? statusCode : undefined,
+      page: 1,
+    });
   };
 
   const handleQuickSortChange = (newSort: SortOptionValue) => {
     setSort(newSort);
-    onSearch({
-      sort: newSort,
-      statusCode: statusCode !== 'ALL' ? statusCode : undefined,
-      unitCode: unitCode.trim() || undefined,
-      phaseId: phaseId !== 'ALL' ? phaseId : undefined,
-      unitTypeCode: unitTypeCode !== 'ALL' ? unitTypeCode : undefined,
-      directionCode: directionCode !== 'ALL' ? directionCode : undefined,
-      page: 1,
-    });
+    onSearch(buildSearchParams({ sort: newSort }));
   };
 
   const handleQuickStatusChange = (newStatus: string) => {
     setStatusCode(newStatus);
-    onSearch({
-      sort,
-      statusCode: newStatus !== 'ALL' ? newStatus : undefined,
-      unitCode: unitCode.trim() || undefined,
-      phaseId: phaseId !== 'ALL' ? phaseId : undefined,
-      unitTypeCode: unitTypeCode !== 'ALL' ? unitTypeCode : undefined,
-      directionCode: directionCode !== 'ALL' ? directionCode : undefined,
-      page: 1,
-    });
+    onSearch(buildSearchParams({ statusCode: newStatus !== 'ALL' ? newStatus : undefined }));
   };
-
-  const currentPhases = projects[0]?.phases || [];
 
   return (
     <Container maxWidth="xl" sx={{ mt: { xs: 2.5, md: 3.5 } }}>
@@ -183,22 +214,22 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
         </Stack>
       </Stack>
 
-      {/* Advanced Filter Collapse Box */}
+      {/* Advanced Filter Collapse Box - Clean Layout matching Figma 1:1 */}
       <Collapse in={showAdvanced}>
         <Paper
           elevation={0}
           sx={{
-            p: { xs: 2, md: 3 },
+            p: { xs: 2.5, md: 3 },
             mb: 3,
             borderRadius: 3,
             border: '1px solid #e2e8f0',
             bgcolor: '#ffffff',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.03)',
           }}
         >
           <Typography
             variant="subtitle2"
-            sx={{ textTransform: 'uppercase', letterSpacing: 0.5, mb: 2, fontWeight: 700, color: 'primary.main' }}
+            sx={{ textTransform: 'uppercase', letterSpacing: 0.5, mb: 2.5, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}
           >
             BỘ LỌC NÂNG CAO
           </Typography>
@@ -215,106 +246,130 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
               gap: 2,
             }}
           >
-            {/* Mã căn hộ */}
-            <FormControl fullWidth size="small">
-              <InputLabel shrink htmlFor="unit-code-input">
+            {/* 1. Mã căn hộ */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
                 Mã căn hộ
-              </InputLabel>
+              </Typography>
               <TextField
-                id="unit-code-input"
+                fullWidth
                 size="small"
                 placeholder="Nhập mã căn hộ"
                 value={unitCode}
                 onChange={(e) => setUnitCode(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleApplyFilter()}
+                sx={{
+                  bgcolor: '#ffffff',
+                  '& .MuiOutlinedInput-root': { borderRadius: 2, fontSize: '0.85rem' },
+                }}
               />
-            </FormControl>
+            </Box>
 
-            {/* Phân khu */}
-            <FormControl fullWidth size="small">
-              <InputLabel id="phase-select-label">Phân khu</InputLabel>
-              <Select
-                labelId="phase-select-label"
-                label="Phân khu"
-                value={phaseId}
-                onChange={(e) => setPhaseId(e.target.value)}
-              >
-                <MenuItem value="ALL">Chọn phân khu</MenuItem>
-                {currentPhases.map((phase) => (
-                  <MenuItem key={phase.id} value={phase.code || phase.id}>
-                    {phase.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* 2. Phân khu */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
+                Phân khu
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={phaseId}
+                  onChange={(e) => setPhaseId(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
+                >
+                  <MenuItem value="ALL">Chọn phân khu</MenuItem>
+                  {DEFAULT_PHASES.map((phase) => (
+                    <MenuItem key={phase.id} value={phase.id}>
+                      {phase.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
 
-            {/* Loại căn */}
-            <FormControl fullWidth size="small">
-              <InputLabel id="unittype-select-label">Loại căn</InputLabel>
-              <Select
-                labelId="unittype-select-label"
-                label="Loại căn"
-                value={unitTypeCode}
-                onChange={(e) => setUnitTypeCode(e.target.value)}
-              >
-                <MenuItem value="ALL">Chọn loại căn</MenuItem>
-                {unitTypes.map((ut) => (
-                  <MenuItem key={ut.id} value={ut.code}>
-                    {ut.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* 3. Loại căn */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
+                Loại căn
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={unitTypeCode}
+                  onChange={(e) => setUnitTypeCode(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
+                >
+                  <MenuItem value="ALL">Chọn loại căn</MenuItem>
+                  {unitTypes.map((ut) => (
+                    <MenuItem key={ut.id} value={ut.code}>
+                      {ut.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
 
-            {/* Hướng đất */}
-            <FormControl fullWidth size="small">
-              <InputLabel id="direction-select-label">Hướng đất</InputLabel>
-              <Select
-                labelId="direction-select-label"
-                label="Hướng đất"
-                value={directionCode}
-                onChange={(e) => setDirectionCode(e.target.value)}
-              >
-                <MenuItem value="ALL">Chọn hướng đất</MenuItem>
-                {directions.map((dir) => (
-                  <MenuItem key={dir.id} value={dir.code}>
-                    {dir.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* 4. Hướng đất */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
+                Hướng đất
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={directionCode}
+                  onChange={(e) => setDirectionCode(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
+                >
+                  <MenuItem value="ALL">Chọn hướng đất</MenuItem>
+                  {directions.map((dir) => (
+                    <MenuItem key={dir.id} value={dir.code}>
+                      {dir.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
 
-            {/* Diện tích */}
-            <FormControl fullWidth size="small">
-              <InputLabel id="area-select-label">Diện tích</InputLabel>
-              <Select
-                labelId="area-select-label"
-                label="Diện tích"
-                value={areaRange}
-                onChange={(e) => setAreaRange(e.target.value)}
-              >
-                <MenuItem value="ALL">Chọn diện tích</MenuItem>
-                <MenuItem value="<100">&lt; 100 m²</MenuItem>
-                <MenuItem value="100-200">100 - 200 m²</MenuItem>
-                <MenuItem value=">200">&gt; 200 m²</MenuItem>
-              </Select>
-            </FormControl>
+            {/* 5. Diện tích */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
+                Diện tích
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={areaRange}
+                  onChange={(e) => setAreaRange(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
+                >
+                  <MenuItem value="ALL">Chọn diện tích</MenuItem>
+                  <MenuItem value="<100">&lt; 100 m²</MenuItem>
+                  <MenuItem value="100-200">100 - 200 m²</MenuItem>
+                  <MenuItem value=">200">&gt; 200 m²</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
 
-            {/* Khoảng giá */}
-            <FormControl fullWidth size="small">
-              <InputLabel id="price-select-label">Khoảng giá</InputLabel>
-              <Select
-                labelId="price-select-label"
-                label="Khoảng giá"
-                value={priceRange}
-                onChange={(e) => setPriceRange(e.target.value)}
-              >
-                <MenuItem value="ALL">Chọn khoảng giá</MenuItem>
-                <MenuItem value="<10">&lt; 10 tỷ</MenuItem>
-                <MenuItem value="10-20">10 - 20 tỷ</MenuItem>
-                <MenuItem value=">20">&gt; 20 tỷ</MenuItem>
-              </Select>
-            </FormControl>
+            {/* 6. Khoảng giá */}
+            <Box>
+              <Typography variant="caption" sx={{ fontWeight: 600, color: '#64748b', mb: 0.8, display: 'block' }}>
+                Khoảng giá
+              </Typography>
+              <FormControl fullWidth size="small">
+                <Select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  displayEmpty
+                  sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
+                >
+                  <MenuItem value="ALL">Chọn khoảng giá</MenuItem>
+                  <MenuItem value="<10">&lt; 10 tỷ</MenuItem>
+                  <MenuItem value="10-20">10 - 20 tỷ</MenuItem>
+                  <MenuItem value=">20">&gt; 20 tỷ</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
           </Box>
 
           {/* Action buttons */}
@@ -328,6 +383,16 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
               borderTop: '1px solid #f1f5f9',
             }}
           >
+            <Button
+              variant="outlined"
+              size="small"
+              color="inherit"
+              startIcon={<RestartAltIcon />}
+              onClick={handleResetFilter}
+              sx={{ textTransform: 'none', borderRadius: 2, color: 'text.secondary' }}
+            >
+              Đặt lại
+            </Button>
             <Button
               variant="outlined"
               size="small"
@@ -347,9 +412,10 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
               sx={{
                 textTransform: 'none',
                 borderRadius: 2,
-                px: 3,
+                px: 3.5,
                 fontWeight: 600,
                 background: 'linear-gradient(90deg, #1d4ed8 0%, #0284c7 100%)',
+                boxShadow: '0 3px 10px rgba(2, 132, 199, 0.3)',
               }}
             >
               {isLoading ? 'Đang tìm...' : 'Tìm kiếm'}

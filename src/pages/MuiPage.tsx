@@ -74,12 +74,21 @@ export const MuiPage: React.FC = () => {
   }, [isAuthenticated, filterParams, fetchUnits]);
 
   const handleSearch = (newParams: UnitSearchParams) => {
-    const updated = {
-      ...filterParams,
+    setFilterParams((prev) => ({
+      ...prev,
       ...newParams,
       page: newParams.page || 1,
-    };
-    setFilterParams(updated);
+      statusCode: newParams.statusCode,
+      unitCode: newParams.unitCode,
+      phaseId: newParams.phaseId,
+      unitTypeCode: newParams.unitTypeCode,
+      directionCode: newParams.directionCode,
+      minAreaLand: newParams.minAreaLand,
+      maxAreaLand: newParams.maxAreaLand,
+      minBasePrice: newParams.minBasePrice,
+      maxBasePrice: newParams.maxBasePrice,
+      sort: newParams.sort || prev.sort,
+    }));
   };
 
   const handlePageChange = (newPage: number) => {

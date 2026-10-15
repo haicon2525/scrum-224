@@ -1,7 +1,7 @@
 import axiosClient from './axiosClient';
 import type { UnitItem, UnitSearchParams, UnitSearchResponse } from '../types/unit';
 
-// Realistic mock fallback matching Figma
+// Realistic mock dataset matching Figma & real master data
 const MOCK_UNITS: UnitItem[] = [
   {
     id: 1,
@@ -52,11 +52,11 @@ const MOCK_UNITS: UnitItem[] = [
     statusName: 'Còn hàng',
     unitTypeCode: 'SHOPHOUSE',
     unitTypeName: 'Shophouse',
-    directionCode: 'SOUTHEAST',
-    directions: ['Đông Nam'],
-    areaLand: 100,
-    areaConstruction: 500,
-    basePrice: 20200000000,
+    directionCode: 'EAST',
+    directions: ['Đông'],
+    areaLand: 95,
+    areaConstruction: 480,
+    basePrice: 18500000000,
     isHot: false,
     createdAt: '2025-01-13T10:00:00Z',
   },
@@ -69,70 +69,70 @@ const MOCK_UNITS: UnitItem[] = [
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
-    unitTypeCode: 'SHOPHOUSE',
-    unitTypeName: 'Shophouse',
-    directionCode: 'SOUTHEAST',
-    directions: ['Đông Nam'],
-    areaLand: 100,
-    areaConstruction: 500,
-    basePrice: 20200000000,
+    unitTypeCode: 'TOWNHOUSE',
+    unitTypeName: 'Liền kề',
+    directionCode: 'SOUTH',
+    directions: ['Nam'],
+    areaLand: 80,
+    areaConstruction: 320,
+    basePrice: 9500000000,
     isHot: false,
     createdAt: '2025-01-12T11:00:00Z',
   },
   {
     id: 5,
-    unitCode: 'PB19-23',
+    unitCode: 'TD12-05',
     projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 1,
-    phaseName: 'Phân khu 1',
+    phaseId: 2,
+    phaseName: 'Phân khu 2',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
-    unitTypeCode: 'SHOPHOUSE',
-    unitTypeName: 'Shophouse',
-    directionCode: 'SOUTHEAST',
-    directions: ['Đông Nam'],
-    areaLand: 100,
-    areaConstruction: 500,
-    basePrice: 20200000000,
+    unitTypeCode: 'VILLA_DUPLEX',
+    unitTypeName: 'Biệt thự song lập',
+    directionCode: 'NORTHEAST',
+    directions: ['Đông Bắc'],
+    areaLand: 150,
+    areaConstruction: 420,
+    basePrice: 25000000000,
     isHot: false,
     createdAt: '2025-01-11T14:20:00Z',
   },
   {
     id: 6,
-    unitCode: 'PB19-24',
+    unitCode: 'VT08-12',
     projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 1,
-    phaseName: 'Phân khu 1',
+    phaseId: 3,
+    phaseName: 'Phân khu 3',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
     unitTypeCode: 'SHOPHOUSE',
     unitTypeName: 'Shophouse',
-    directionCode: 'SOUTHEAST',
-    directions: ['Đông Nam'],
-    areaLand: 100,
-    areaConstruction: 500,
-    basePrice: 20200000000,
+    directionCode: 'NORTH',
+    directions: ['Bắc'],
+    areaLand: 120,
+    areaConstruction: 550,
+    basePrice: 22000000000,
     isHot: false,
     createdAt: '2025-01-10T16:00:00Z',
   },
   {
     id: 7,
-    unitCode: 'PB19-25',
+    unitCode: 'AD04-18',
     projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 1,
-    phaseName: 'Phân khu 1',
+    phaseId: 2,
+    phaseName: 'Phân khu 2',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
-    unitTypeCode: 'SHOPHOUSE',
-    unitTypeName: 'Shophouse',
-    directionCode: 'SOUTHEAST',
-    directions: ['Đông Nam'],
-    areaLand: 100,
-    areaConstruction: 500,
-    basePrice: 20200000000,
+    unitTypeCode: 'APARTMENT',
+    unitTypeName: 'Căn hộ chung cư',
+    directionCode: 'WEST',
+    directions: ['Tây'],
+    areaLand: 75,
+    areaConstruction: 75,
+    basePrice: 4200000000,
     isHot: false,
     createdAt: '2025-01-09T08:15:00Z',
   },
@@ -193,6 +193,25 @@ const MOCK_UNITS: UnitItem[] = [
     isHot: true,
     createdAt: '2025-01-06T15:00:00Z',
   },
+  {
+    id: 11,
+    unitCode: 'VT02-01',
+    projectId: 65,
+    projectName: 'Vinhomes Ocean Park 3',
+    phaseId: 3,
+    phaseName: 'Phân khu 3',
+    statusCode: 'AVAILABLE',
+    statusName: 'Còn hàng',
+    unitTypeCode: 'VILLA_SINGLE',
+    unitTypeName: 'Biệt thự đơn lập',
+    directionCode: 'NORTHWEST',
+    directions: ['Tây Bắc', 'Bắc'],
+    areaLand: 320,
+    areaConstruction: 700,
+    basePrice: 45000000000,
+    isHot: true,
+    createdAt: '2025-01-05T09:00:00Z',
+  },
 ];
 
 export const unitApi = {
@@ -233,8 +252,7 @@ export const unitApi = {
         params: queryParams,
       });
 
-      // Handle standard response format { code, data, pageNumber, totalElements, totalPages }
-      if (res && res.code === 'SUCCESS' && Array.isArray(res.data)) {
+      if (res && res.code === 'SUCCESS' && Array.isArray(res.data) && res.data.length > 0) {
         return {
           data: res.data.map((u: any) => ({
             id: u.id,
@@ -267,28 +285,49 @@ export const unitApi = {
       // Mock search & filter handling
       let result = [...MOCK_UNITS];
 
+      // Mã căn
       if (params.unitCode) {
         const q = params.unitCode.toLowerCase().trim();
         result = result.filter((u) => u.unitCode.toLowerCase().includes(q));
       }
 
+      // Trạng thái
       if (params.statusCode && params.statusCode !== 'ALL') {
         result = result.filter((u) => u.statusCode === params.statusCode);
       }
 
+      // Phân khu
       if (params.phaseId && params.phaseId !== 'ALL') {
-        result = result.filter((u) => String(u.phaseId) === String(params.phaseId));
+        result = result.filter((u) => String(u.phaseId) === String(params.phaseId) || String(u.phaseName).includes(String(params.phaseId)));
       }
 
+      // Loại căn
       if (params.unitTypeCode && params.unitTypeCode !== 'ALL') {
         result = result.filter((u) => u.unitTypeCode === params.unitTypeCode);
       }
 
+      // Hướng đất
       if (params.directionCode && params.directionCode !== 'ALL') {
         result = result.filter((u) => u.directionCode === params.directionCode);
       }
 
-      // Sorting
+      // Diện tích đất
+      if (params.minAreaLand !== undefined) {
+        result = result.filter((u) => u.areaLand >= (params.minAreaLand as number));
+      }
+      if (params.maxAreaLand !== undefined) {
+        result = result.filter((u) => u.areaLand <= (params.maxAreaLand as number));
+      }
+
+      // Khoảng giá
+      if (params.minBasePrice !== undefined) {
+        result = result.filter((u) => u.basePrice >= (params.minBasePrice as number));
+      }
+      if (params.maxBasePrice !== undefined) {
+        result = result.filter((u) => u.basePrice <= (params.maxBasePrice as number));
+      }
+
+      // Sắp xếp
       if (params.sort) {
         switch (params.sort) {
           case 'isHot:desc,createdAt:desc':
