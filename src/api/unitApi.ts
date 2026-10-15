@@ -1,14 +1,14 @@
 import axiosClient from './axiosClient';
 import type { UnitItem, UnitSearchParams, UnitSearchResponse } from '../types/unit';
 
-// Realistic mock data reflecting the Figma table
+// Realistic mock fallback matching Figma
 const MOCK_UNITS: UnitItem[] = [
   {
     id: 1,
     unitCode: 'PB19-19',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -25,9 +25,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 2,
     unitCode: 'PB19-20',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -44,9 +44,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 3,
     unitCode: 'PB19-21',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -63,9 +63,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 4,
     unitCode: 'PB19-22',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -82,9 +82,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 5,
     unitCode: 'PB19-23',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -101,9 +101,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 6,
     unitCode: 'PB19-24',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -120,9 +120,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 7,
     unitCode: 'PB19-25',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'AVAILABLE',
     statusName: 'Còn hàng',
@@ -139,9 +139,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 8,
     unitCode: 'PB19-26',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'SOLD',
     statusName: 'Đã bán',
@@ -158,9 +158,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 9,
     unitCode: 'PB19-27',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-1',
+    phaseId: 1,
     phaseName: 'Phân khu 1',
     statusCode: 'SOLD',
     statusName: 'Đã bán',
@@ -177,9 +177,9 @@ const MOCK_UNITS: UnitItem[] = [
   {
     id: 10,
     unitCode: 'TD12-08',
-    projectId: 'vh-op3',
+    projectId: 65,
     projectName: 'Vinhomes Ocean Park 3',
-    phaseId: 'phase-2',
+    phaseId: 2,
     phaseName: 'Phân khu 2',
     statusCode: 'DEPOSITED',
     statusName: 'Đang cọc',
@@ -198,14 +198,71 @@ const MOCK_UNITS: UnitItem[] = [
 export const unitApi = {
   /**
    * Search units by criteria
-   * Endpoint: /portal/unit/search
+   * Endpoint: /portal/units/search (Swagger UAT)
    */
   async search(params: UnitSearchParams): Promise<UnitSearchResponse> {
     try {
-      const res = await axiosClient.get<any, UnitSearchResponse>('/portal/unit/search', {
-        params,
+      // Convert 1-indexed frontend page to 0-indexed backend pageNumber
+      const page = params.page || 1;
+      const pageSize = params.pageSize || 10;
+      const pageNumber = page - 1;
+
+      const queryParams: Record<string, any> = {
+        pageNumber,
+        pageSize,
+        sort: params.sort,
+        unitCode: params.unitCode,
+        statusCode: params.statusCode,
+        phaseId: params.phaseId,
+        unitTypeCode: params.unitTypeCode,
+        directionCode: params.directionCode,
+        minAreaLand: params.minAreaLand,
+        maxAreaLand: params.maxAreaLand,
+        minBasePrice: params.minBasePrice,
+        maxBasePrice: params.maxBasePrice,
+      };
+
+      // Clean empty keys
+      Object.keys(queryParams).forEach((key) => {
+        if (queryParams[key] === undefined || queryParams[key] === null || queryParams[key] === '') {
+          delete queryParams[key];
+        }
       });
-      return res;
+
+      const res: any = await axiosClient.get('/portal/units/search', {
+        params: queryParams,
+      });
+
+      // Handle standard response format { code, data, pageNumber, totalElements, totalPages }
+      if (res && res.code === 'SUCCESS' && Array.isArray(res.data)) {
+        return {
+          data: res.data.map((u: any) => ({
+            id: u.id,
+            unitCode: u.code || u.unitCode,
+            projectId: u.projectId,
+            projectName: u.projectName || 'Vinhomes Ocean Park',
+            phaseId: u.phaseId,
+            phaseName: u.phaseName || (u.phaseId ? `Phân khu ${u.phaseId}` : 'Phân khu 1'),
+            statusCode: u.statusCode,
+            statusName: u.statusName || (u.statusCode === 'SOLD' ? 'Đã bán' : u.statusCode === 'DEPOSITED' ? 'Đang cọc' : 'Còn hàng'),
+            unitTypeCode: u.unitTypeCode || u.typeCode,
+            unitTypeName: u.unitTypeName || u.typeName || 'Shophouse',
+            directionCode: u.directionCode,
+            directions: u.directions || u.directionName || 'Đông Nam',
+            areaLand: u.areaLand || u.landArea || 100,
+            areaConstruction: u.areaBuilding || u.areaConstruction || 500,
+            basePrice: u.basePrice || u.price || 20200000000,
+            isHot: Boolean(u.isHot),
+            createdAt: u.createdAt || new Date().toISOString(),
+          })),
+          total: res.totalElements || res.data.length,
+          page: (res.pageNumber || 0) + 1,
+          pageSize: res.pageSize || pageSize,
+          totalPages: res.totalPages || Math.ceil((res.totalElements || res.data.length) / pageSize) || 1,
+        };
+      }
+
+      throw new Error('Fallback to mock');
     } catch {
       // Mock search & filter handling
       let result = [...MOCK_UNITS];

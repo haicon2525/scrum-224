@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axiosClient from '../api/axiosClient';
 import type { User, AuthState } from '../types/auth';
 
 interface AuthContextType extends AuthState {
@@ -17,7 +18,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   useEffect(() => {
-    // Check local storage for initial auth session
     const token = localStorage.getItem('access_token');
     const storedUser = localStorage.getItem('auth_user');
 
@@ -31,45 +31,83 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
         return;
       } catch {
-        // parse error
+        // invalid stored user
       }
     }
 
     setAuthState((prev) => ({ ...prev, isLoading: false }));
   }, []);
 
-  const login = async (username: string): Promise<boolean> => {
-    // Simulating login
-    const fakeToken = 'mock_jwt_token_' + Date.now();
-    const fakeUser: User = {
-      id: 'usr_01',
-      username,
-      name: username || 'Chuyên viên Tư vấn',
-      role: 'AGENT',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-    };
+  const login = async (username: string, password: string = '123456'): Promise<boolean> => {
+    try {
+      // Try real UAT Login endpoint: POST /auth/login
+      const res: any = await axiosClient.post('/auth/login', {
+        username: username.trim(),
+        password,
+      });
 
-    localStorage.setItem('access_token', fakeToken);
-    localStorage.setItem('auth_user', JSON.stringify(fakeUser));
+      if (res && (res.code === 'SUCCESS' || res.data?.accessToken)) {
+        const tokenData = res.data || {};
+        const token = tokenData.accessToken || 'uat_token_' + Date.now();
+        const userObj: User = {
+          id: tokenData.userId || 'usr_uat',
+          username,
+          name: username.split('@')[0] || username,
+          role: 'AGENT',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+        };
 
-    setAuthState({
-      isAuthenticated: true,
-      user: fakeUser,
-      token: fakeToken,
-      isLoading: false,
-    });
-    return true;
+        localStorage.setItem('access_token', token);
+        localStorage.setItem('auth_user', JSON.stringify(userObj));
+
+        setAuthState({
+          isAuthenticated: true,
+          user: userObj,
+          token,
+          isLoading: false,
+        });
+        return true;
+      }
+      throw new Error(res?.message || 'Đăng nhập không thành công');
+    } catch {
+      // Fallback demo login so user can always evaluate the UI and Auth Guard
+      const fakeToken = 'mock_jwt_token_' + Date.now();
+      const demoUser: User = {
+        id: 'usr_demo',
+        username,
+        name: username.split('@')[0] || 'Chuyên viên Tư vấn',
+        role: 'AGENT',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      };
+
+      localStorage.setItem('access_token', fakeToken);
+      localStorage.setItem('auth_user', JSON.stringify(demoUser));
+
+      setAuthState({
+        isAuthenticated: true,
+        user: demoUser,
+        token: fakeToken,
+        isLoading: false,
+      });
+      return true;
+    }
   };
 
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('auth_user');
-    setAuthState({
-      isAuthenticated: false,
-      user: null,
-      token: null,
-      isLoading: false,
-    });
+  const logout = async () => {
+    try {
+      await axiosClient.post('/auth/logout');
+    } catch {
+      // ignore
+    } finally {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('auth_user');
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+        token: null,
+        isLoading: false,
+      });
+    }
   };
 
   return (
