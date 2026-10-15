@@ -19,7 +19,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import type { UnitItem } from '../../types/unit';
-import { formatBasePrice } from '../../utils/formatters';
+import { formatBasePrice, formatDirections } from '../../utils/formatters';
 
 interface UnitMapModalProps {
   open: boolean;
@@ -33,7 +33,8 @@ export const UnitMapModal: React.FC<UnitMapModalProps> = ({ open, unit, onClose 
   if (!unit) return null;
 
   // Derive pseudo coordinates from unit ID/Code to place pin accurately on masterplan
-  const hash = unit.unitCode.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const codeStr = String(unit.unitCode || 'UNIT');
+  const hash = codeStr.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const pinX = 35 + (hash % 35); // 35% to 70%
   const pinY = 30 + ((hash * 7) % 40); // 30% to 70%
 
@@ -193,7 +194,7 @@ export const UnitMapModal: React.FC<UnitMapModalProps> = ({ open, unit, onClose 
             {unit.unitCode} - {formatBasePrice(unit.basePrice)}
           </Typography>
           <Typography sx={{ fontSize: '0.82rem', color: '#475569', mt: 0.5 }}>
-            {unit.unitTypeName || 'Shophouse'} • {unit.directions || 'Đông Nam'}
+            {unit.unitTypeName || 'Shophouse'} • {formatDirections(unit.directions)}
           </Typography>
           <Chip
             size="small"
