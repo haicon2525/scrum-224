@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container, Paper, Tabs, Tab } from '@mui/material';
 import LanguageIcon from '@mui/icons-material/Language';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -19,7 +20,18 @@ const TABS = [
 ];
 
 export const MuiNavPills: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState('units');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'units';
+
+  const handleTabChange = (_: React.SyntheticEvent, newTab: string) => {
+    // Preserve existing unit param if switching to floorplan, otherwise clean
+    const currentUnit = searchParams.get('unit');
+    if (newTab === 'floorplan' && currentUnit) {
+      setSearchParams({ tab: newTab, unit: currentUnit });
+    } else {
+      setSearchParams({ tab: newTab });
+    }
+  };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 2 }}>
@@ -34,7 +46,7 @@ export const MuiNavPills: React.FC = () => {
       >
         <Tabs
           value={currentTab}
-          onChange={(_, val) => setCurrentTab(val)}
+          onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
           sx={{

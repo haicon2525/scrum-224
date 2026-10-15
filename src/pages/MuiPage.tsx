@@ -1,10 +1,12 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Box, createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import { MuiHeader } from '../components/mui/MuiHeader';
 import { MuiHeroBanner } from '../components/mui/MuiHeroBanner';
 import { MuiNavPills } from '../components/mui/MuiNavPills';
 import { MuiFooter } from '../components/mui/MuiFooter';
 import { UnitFilterMUI } from './MuiVersion/UnitFilterMUI';
+import { FloorplanView } from './MuiVersion/FloorplanView';
 
 // Dedicated clean MUI theme with custom palette
 const muiTheme = createTheme({
@@ -32,6 +34,9 @@ const muiTheme = createTheme({
 });
 
 export const MuiPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'units';
+
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
@@ -49,8 +54,13 @@ export const MuiPage: React.FC = () => {
         <Box component="main" sx={{ flexGrow: 1 }}>
           <MuiHeroBanner />
           <MuiNavPills />
-          {/* Main Unit Search & Filter Container (100% Real Portal APIs & Responsive View) */}
-          <UnitFilterMUI />
+
+          {/* Conditional View: Floorplan Masterplan vs Unit Search & Filter */}
+          {currentTab === 'floorplan' ? (
+            <FloorplanView />
+          ) : (
+            <UnitFilterMUI />
+          )}
         </Box>
 
         <MuiFooter />
