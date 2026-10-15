@@ -31,7 +31,7 @@ interface MuiUnitTableProps {
   isLoading: boolean;
   page: number;
   totalPages: number;
-  total: number;
+  total?: number;
   onPageChange: (newPage: number) => void;
 }
 
@@ -40,11 +40,10 @@ export const MuiUnitTable: React.FC<MuiUnitTableProps> = ({
   isLoading,
   page,
   totalPages,
-  total,
   onPageChange,
 }) => {
   return (
-    <Container maxWidth="xl" sx={{ mb: 5 }}>
+    <Container maxWidth="xl" sx={{ mb: { xs: 3, md: 5 } }}>
       <Paper
         elevation={0}
         sx={{
@@ -52,38 +51,38 @@ export const MuiUnitTable: React.FC<MuiUnitTableProps> = ({
           border: '1px solid #e2e8f0',
           overflow: 'hidden',
           bgcolor: '#ffffff',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.03)',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
         }}
       >
         <TableContainer>
-          <Table sx={{ minWidth: 900 }}>
+          <Table sx={{ width: '100%' }}>
             <TableHead sx={{ bgcolor: '#f8fafc' }}>
               <TableRow>
-                <TableCell align="center" sx={{ width: 80, fontWeight: 700, color: 'primary.main' }}>
+                <TableCell align="center" sx={{ width: { xs: 60, md: 80 }, py: 1.5 }}>
                   {/* Icon column */}
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Mã căn
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Giá bán
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Loại hình
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   DT đất
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   DT xây dựng
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Hướng
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Phân khu
                 </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '0.85rem' }}>
+                <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 700, color: 'primary.main', fontSize: '0.85rem', py: 1.5 }}>
                   Tình trạng
                 </TableCell>
               </TableRow>
@@ -102,7 +101,7 @@ export const MuiUnitTable: React.FC<MuiUnitTableProps> = ({
               ) : units.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={9} align="center" sx={{ py: 8 }}>
-                    <SearchOffIcon sx={{ fontSize: 48, color: '#94a3b8', mb: 1 }} />
+                    <SearchOffIcon sx={{ fontSize: 44, color: '#94a3b8', mb: 1 }} />
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.secondary' }}>
                       Không tìm thấy căn hộ nào phù hợp
                     </Typography>
@@ -126,96 +125,91 @@ export const MuiUnitTable: React.FC<MuiUnitTableProps> = ({
                       }}
                     >
                       {/* Hotdeal & Pin icons */}
-                      <TableCell align="center">
-                        <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                      <TableCell align="center" sx={{ py: 1 }}>
+                        <Stack direction="row" spacing={0.5} sx={{ justifyContent: 'center', alignItems: 'center' }}>
                           {unit.isHot ? (
                             <Tooltip title="Căn Hotdeal">
-                              <WhatshotIcon sx={{ color: '#ef4444', fontSize: 20 }} />
+                              <WhatshotIcon sx={{ color: '#ef4444', fontSize: { xs: 17, md: 19 } }} />
                             </Tooltip>
                           ) : (
-                            <Box sx={{ width: 20 }} />
+                            <Box sx={{ width: { xs: 17, md: 19 } }} />
                           )}
 
                           <Tooltip title="Xem định vị trên sơ đồ">
-                            <IconButton size="small" sx={{ p: 0.5, color: '#3b82f6' }}>
-                              <LocationOnIcon fontSize="small" />
+                            <IconButton size="small" sx={{ p: 0.3, color: '#3b82f6' }}>
+                              <LocationOnIcon sx={{ fontSize: { xs: 16, md: 18 } }} />
                             </IconButton>
                           </Tooltip>
                         </Stack>
                       </TableCell>
 
                       {/* Mã căn */}
-                      <TableCell align="center">
+                      <TableCell align="center" sx={{ py: 1 }}>
                         <Chip
                           label={unit.unitCode}
                           size="small"
                           sx={{
                             fontWeight: 700,
-                            fontSize: '0.8rem',
+                            fontSize: '0.78rem',
                             borderRadius: 1.5,
-                            bgcolor: isSold ? '#ffe4e6' : isDeposited ? '#fef3c7' : '#eff6ff',
-                            color: isSold ? '#e11d48' : isDeposited ? '#d97706' : '#2563eb',
+                            bgcolor: isSold ? '#ffedd5' : isDeposited ? '#fef3c7' : '#e0f2fe',
+                            color: isSold ? '#ea580c' : isDeposited ? '#d97706' : '#0284c7',
                             border: '1px solid',
-                            borderColor: isSold ? '#fecdd3' : isDeposited ? '#fde68a' : '#bfdbfe',
+                            borderColor: isSold ? '#fed7aa' : isDeposited ? '#fde68a' : '#bae6fd',
                           }}
                         />
                       </TableCell>
 
                       {/* Giá bán formatted xx,xx tỷ */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#334155' }}>
+                      <TableCell align="center" sx={{ py: 1 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#475569', fontSize: '0.82rem' }}>
                           {formatBasePrice(unit.basePrice)}
                         </Typography>
                       </TableCell>
 
-                      {/* Loại hình */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ color: '#475569' }}>
+                      {/* Desktop only columns */}
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
                           {unit.unitTypeName || unit.unitTypeCode}
                         </Typography>
                       </TableCell>
 
-                      {/* DT đất */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ color: '#475569' }}>
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
                           {formatArea(unit.areaLand)}
                         </Typography>
                       </TableCell>
 
-                      {/* DT xây dựng */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ color: '#475569' }}>
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
                           {unit.areaConstruction ? formatArea(unit.areaConstruction) : '-'}
                         </Typography>
                       </TableCell>
 
-                      {/* Hướng formatted with " - " for corner units */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ color: '#475569' }}>
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
                           {formatDirections(unit.directions)}
                         </Typography>
                       </TableCell>
 
-                      {/* Phân khu */}
-                      <TableCell align="center">
-                        <Typography variant="body2" sx={{ color: '#475569' }}>
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#475569', fontSize: '0.82rem' }}>
                           {unit.phaseName || `Phân khu ${unit.phaseId}`}
                         </Typography>
                       </TableCell>
 
-                      {/* Tình trạng badge */}
-                      <TableCell align="center">
+                      <TableCell align="center" sx={{ display: { xs: 'none', md: 'table-cell' }, py: 1 }}>
                         <Chip
                           label={unit.statusName || (isSold ? 'Đã bán' : isDeposited ? 'Đang cọc' : 'Còn hàng')}
                           size="small"
                           sx={{
                             fontWeight: 600,
-                            fontSize: '0.75rem',
+                            fontSize: '0.73rem',
                             borderRadius: 50,
-                            bgcolor: isSold ? '#fef2f2' : isDeposited ? '#fffbeb' : '#ecfdf5',
-                            color: isSold ? '#dc2626' : isDeposited ? '#b45309' : '#059669',
+                            bgcolor: isSold ? '#ffe4e6' : isDeposited ? '#fffbeb' : '#ccfbf1',
+                            color: isSold ? '#be123c' : isDeposited ? '#b45309' : '#0f766e',
                             border: '1px solid',
-                            borderColor: isSold ? '#fecaca' : isDeposited ? '#fef3c7' : '#a7f3d0',
+                            borderColor: isSold ? '#fecdd3' : isDeposited ? '#fef3c7' : '#99f6e4',
                           }}
                         />
                       </TableCell>
@@ -227,51 +221,94 @@ export const MuiUnitTable: React.FC<MuiUnitTableProps> = ({
           </Table>
         </TableContainer>
 
-        {/* Pagination footer */}
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={2}
-          sx={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            p: 2.5,
-            borderTop: '1px solid #f1f5f9',
-            bgcolor: '#ffffff',
-          }}
-        >
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Trang
-            </Typography>
-            <FormControl size="small">
-              <Select
-                value={page}
-                onChange={(e) => onPageChange(Number(e.target.value))}
-                sx={{ height: 32, fontSize: '0.85rem' }}
-              >
-                {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map((p) => (
-                  <MenuItem key={p} value={p}>
-                    {p}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Của {totalPages || 1} (Tổng {total} căn)
-            </Typography>
+        {/* Responsive Pagination footer */}
+        <Box sx={{ p: 2, borderTop: '1px solid #f1f5f9', bgcolor: '#ffffff' }}>
+          {/* Desktop Layout: side-by-side */}
+          <Stack
+            direction="row"
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.82rem' }}>
+                Trang
+              </Typography>
+              <FormControl size="small">
+                <Select
+                  value={page}
+                  onChange={(e) => onPageChange(Number(e.target.value))}
+                  sx={{ height: 30, fontSize: '0.82rem' }}
+                >
+                  {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map((p) => (
+                    <MenuItem key={p} value={p}>
+                      {p}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.82rem' }}>
+                Của {totalPages || 1}
+              </Typography>
+            </Stack>
+
+            <Pagination
+              count={totalPages || 1}
+              page={page}
+              onChange={(_, val) => onPageChange(val)}
+              color="primary"
+              shape="rounded"
+              size="small"
+              showFirstButton
+              showLastButton
+            />
           </Stack>
 
-          <Pagination
-            count={totalPages || 1}
-            page={page}
-            onChange={(_, val) => onPageChange(val)}
-            color="primary"
-            shape="rounded"
-            size="small"
-            showFirstButton
-            showLastButton
-          />
-        </Stack>
+          {/* Mobile Layout: Pagination on top, selector on bottom */}
+          <Stack
+            spacing={1.5}
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              alignItems: 'center',
+              py: 0.5,
+            }}
+          >
+            <Pagination
+              count={totalPages || 1}
+              page={page}
+              onChange={(_, val) => onPageChange(val)}
+              color="primary"
+              shape="rounded"
+              size="small"
+              showFirstButton
+              showLastButton
+            />
+
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.82rem' }}>
+                Trang
+              </Typography>
+              <FormControl size="small">
+                <Select
+                  value={page}
+                  onChange={(e) => onPageChange(Number(e.target.value))}
+                  sx={{ height: 28, fontSize: '0.82rem' }}
+                >
+                  {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map((p) => (
+                    <MenuItem key={p} value={p}>
+                      {p}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.82rem' }}>
+                Của {totalPages || 1}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Box>
       </Paper>
     </Container>
   );

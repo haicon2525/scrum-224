@@ -26,7 +26,7 @@ interface MuiUnitFilterProps {
 }
 
 export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoading }) => {
-  const [showAdvanced, setShowAdvanced] = useState(true);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Master data states
   const [statuses, setStatuses] = useState<MasterDataItem[]>([]);
@@ -45,7 +45,6 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
   const [priceRange, setPriceRange] = useState<string>('ALL');
 
   useEffect(() => {
-    // Call Master Data APIs
     const fetchMasterData = async () => {
       try {
         const [stList, utList, dirList, projList] = await Promise.all([
@@ -108,29 +107,34 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
   const currentPhases = projects[0]?.phases || [];
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 3 }}>
+    <Container maxWidth="xl" sx={{ mt: { xs: 2.5, md: 3.5 } }}>
       {/* Title & Quick Controls Bar */}
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         spacing={2}
         sx={{
           justifyContent: 'space-between',
-          alignItems: { xs: 'flex-start', md: 'center' },
+          alignItems: { xs: 'stretch', md: 'center' },
           mb: 2,
         }}
       >
-        <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.main' }}>
+        <Typography variant="h5" sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
           BẢNG HÀNG
         </Typography>
 
-        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        {/* Controls: Stacked on mobile, row on desktop */}
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={1.5}
+          sx={{ alignItems: 'stretch', width: { xs: '100%', md: 'auto' } }}
+        >
           {/* Sort selector */}
-          <FormControl size="small" sx={{ minWidth: 200 }}>
+          <FormControl size="small" sx={{ width: { xs: '100%', md: 200 } }}>
             <Select
               value={sort}
               onChange={(e) => handleQuickSortChange(e.target.value as SortOptionValue)}
               displayEmpty
-              sx={{ bgcolor: '#ffffff', borderRadius: 2 }}
+              sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
             >
               <MenuItem value="isHot:desc,createdAt:desc">Sắp xếp theo mặc định</MenuItem>
               <MenuItem value="createdAt:desc">Mới nhất</MenuItem>
@@ -141,12 +145,12 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
           </FormControl>
 
           {/* Status quick select */}
-          <FormControl size="small" sx={{ minWidth: 160 }}>
+          <FormControl size="small" sx={{ width: { xs: '100%', md: 170 } }}>
             <Select
               value={statusCode}
               onChange={(e) => handleQuickStatusChange(e.target.value)}
               displayEmpty
-              sx={{ bgcolor: '#ffffff', borderRadius: 2 }}
+              sx={{ bgcolor: '#ffffff', borderRadius: 2, fontSize: '0.85rem' }}
             >
               <MenuItem value="ALL">Tất cả trạng thái</MenuItem>
               {statuses.map((st) => (
@@ -161,14 +165,17 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
           <Button
             variant="contained"
             size="small"
-            startIcon={<FilterAltIcon />}
+            startIcon={<FilterAltIcon sx={{ fontSize: '18px !important' }} />}
             onClick={() => setShowAdvanced(!showAdvanced)}
             sx={{
               textTransform: 'none',
               borderRadius: 2,
-              px: 2,
+              px: 2.5,
               py: 0.9,
               fontWeight: 600,
+              width: { xs: '100%', md: 'auto' },
+              background: 'linear-gradient(90deg, #1d4ed8 0%, #0284c7 100%)',
+              boxShadow: '0 3px 10px rgba(2, 132, 199, 0.3)',
             }}
           >
             Bộ lọc
@@ -181,7 +188,7 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
         <Paper
           elevation={0}
           sx={{
-            p: 3,
+            p: { xs: 2, md: 3 },
             mb: 3,
             borderRadius: 3,
             border: '1px solid #e2e8f0',
@@ -312,7 +319,7 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
 
           {/* Action buttons */}
           <Stack
-            direction="row"
+            direction={{ xs: 'column', sm: 'row' }}
             spacing={1.5}
             sx={{
               justifyContent: 'flex-end',
@@ -337,7 +344,13 @@ export const MuiUnitFilter: React.FC<MuiUnitFilterProps> = ({ onSearch, isLoadin
               startIcon={<SearchIcon />}
               onClick={handleApplyFilter}
               disabled={isLoading}
-              sx={{ textTransform: 'none', borderRadius: 2, px: 3, fontWeight: 600 }}
+              sx={{
+                textTransform: 'none',
+                borderRadius: 2,
+                px: 3,
+                fontWeight: 600,
+                background: 'linear-gradient(90deg, #1d4ed8 0%, #0284c7 100%)',
+              }}
             >
               {isLoading ? 'Đang tìm...' : 'Tìm kiếm'}
             </Button>

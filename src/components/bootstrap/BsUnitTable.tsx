@@ -29,20 +29,20 @@ const STATIC_UNITS: StaticUnitRow[] = [
 export const BsUnitTable: React.FC = () => {
   return (
     <div className="container-fluid px-3 px-md-4">
-      <div className="bg-white rounded-3 shadow-sm overflow-hidden mb-4">
+      <div className="bg-white rounded-3 shadow-sm overflow-hidden mb-4 border border-light">
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0 text-center">
             <thead className="table-light">
               <tr>
-                <th style={{ width: '80px' }}></th>
-                <th className="text-primary">Mã căn</th>
-                <th className="text-primary">Giá bán</th>
-                <th className="text-primary">Loại hình</th>
-                <th className="text-primary">DT đất</th>
-                <th className="text-primary">DT xây dựng</th>
-                <th className="text-primary">Hướng</th>
-                <th className="text-primary">Phân khu</th>
-                <th className="text-primary">Tình trạng</th>
+                <th style={{ width: '70px' }}></th>
+                <th className="text-primary fw-bold" style={{ fontSize: '13px' }}>Mã căn</th>
+                <th className="text-primary fw-bold" style={{ fontSize: '13px' }}>Giá bán</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Loại hình</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>DT đất</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>DT xây dựng</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Hướng</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Phân khu</th>
+                <th className="text-primary fw-bold d-none d-md-table-cell" style={{ fontSize: '13px' }}>Tình trạng</th>
               </tr>
             </thead>
             <tbody>
@@ -50,11 +50,11 @@ export const BsUnitTable: React.FC = () => {
                 <tr key={item.id}>
                   {/* Hotdeal & Pin icons */}
                   <td>
-                    <div className="d-flex align-items-center justify-content-center gap-2">
+                    <div className="d-flex align-items-center justify-content-center gap-1">
                       {item.isHot ? (
-                        <span title="Hotdeal" style={{ color: '#ef4444', fontSize: '16px' }}>🔥</span>
+                        <span title="Hotdeal" style={{ color: '#ef4444', fontSize: '15px' }}>🔥</span>
                       ) : (
-                        <span style={{ width: '16px', display: 'inline-block' }}></span>
+                        <span style={{ width: '15px', display: 'inline-block' }}></span>
                       )}
                       <span title="Xem vị trí" style={{ color: '#3b82f6', fontSize: '15px', cursor: 'pointer' }}>📍</span>
                     </div>
@@ -63,44 +63,33 @@ export const BsUnitTable: React.FC = () => {
                   {/* Unit Code Badge */}
                   <td>
                     <span
-                      className={`badge fw-bold px-3 py-2 ${
+                      className={`badge fw-bold px-2 px-md-3 py-2 ${
                         item.status === 'sold'
-                          ? 'bg-warning bg-opacity-25 text-danger border border-warning'
-                          : 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25'
+                          ? 'badge-unit-sold'
+                          : 'badge-unit-blue'
                       }`}
-                      style={{ fontSize: '12px', borderRadius: '6px' }}
+                      style={{ fontSize: '12px' }}
                     >
                       {item.unitCode}
                     </span>
                   </td>
 
                   {/* Price */}
-                  <td className="fw-semibold text-secondary">{item.price}</td>
+                  <td className="fw-semibold text-secondary" style={{ fontSize: '13px' }}>
+                    {item.price}
+                  </td>
 
-                  {/* Type */}
-                  <td className="text-secondary">{item.type}</td>
-
-                  {/* Land Area */}
-                  <td className="text-secondary">{item.areaLand}</td>
-
-                  {/* Construction Area */}
-                  <td className="text-secondary">{item.areaConst}</td>
-
-                  {/* Direction */}
-                  <td className="text-secondary">{item.direction}</td>
-
-                  {/* Phase */}
-                  <td className="text-secondary">{item.phase}</td>
+                  {/* Desktop columns */}
+                  <td className="text-secondary d-none d-md-table-cell" style={{ fontSize: '13px' }}>{item.type}</td>
+                  <td className="text-secondary d-none d-md-table-cell" style={{ fontSize: '13px' }}>{item.areaLand}</td>
+                  <td className="text-secondary d-none d-md-table-cell" style={{ fontSize: '13px' }}>{item.areaConst}</td>
+                  <td className="text-secondary d-none d-md-table-cell" style={{ fontSize: '13px' }}>{item.direction}</td>
+                  <td className="text-secondary d-none d-md-table-cell" style={{ fontSize: '13px' }}>{item.phase}</td>
 
                   {/* Status Badge */}
-                  <td>
+                  <td className="d-none d-md-table-cell">
                     <span
-                      className={`badge rounded-pill px-3 py-1 fw-medium ${
-                        item.status === 'sold'
-                          ? 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'
-                          : 'bg-info bg-opacity-10 text-info border border-info border-opacity-25'
-                      }`}
-                      style={{ fontSize: '12px' }}
+                      className={item.status === 'sold' ? 'status-badge-sold' : 'status-badge-available'}
                     >
                       {item.statusText}
                     </span>
@@ -111,31 +100,61 @@ export const BsUnitTable: React.FC = () => {
           </table>
         </div>
 
-        {/* Pagination bar */}
-        <div className="d-flex flex-wrap justify-content-between align-items-center p-3 border-top gap-3">
-          <div className="d-flex align-items-center gap-2 small text-muted">
-            <span>Trang</span>
-            <select className="form-select form-select-sm" style={{ width: '65px' }} defaultValue="1">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-            <span>Của 20</span>
+        {/* Responsive Pagination matching Figma */}
+        <div className="p-3 border-top">
+          {/* Desktop Pagination Layout */}
+          <div className="d-none d-md-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-2 small text-muted">
+              <span>Trang</span>
+              <select className="form-select form-select-sm" style={{ width: '65px' }} defaultValue="1">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+              <span>Của 20</span>
+            </div>
+
+            <nav aria-label="Page navigation">
+              <ul className="pagination pagination-sm mb-0">
+                <li className="page-item disabled"><span className="page-link">«</span></li>
+                <li className="page-item disabled"><span className="page-link">&lt;</span></li>
+                <li className="page-item active"><span className="page-link">1</span></li>
+                <li className="page-item"><span className="page-link">2</span></li>
+                <li className="page-item"><span className="page-link">3</span></li>
+                <li className="page-item disabled"><span className="page-link">...</span></li>
+                <li className="page-item"><span className="page-link">10</span></li>
+                <li className="page-item"><span className="page-link">&gt;</span></li>
+                <li className="page-item"><span className="page-link">»</span></li>
+              </ul>
+            </nav>
           </div>
 
-          <nav aria-label="Page navigation">
-            <ul className="pagination pagination-sm mb-0">
-              <li className="page-item disabled"><a className="page-link" href="#first">«</a></li>
-              <li className="page-item disabled"><a className="page-link" href="#prev">&lt;</a></li>
-              <li className="page-item active"><a className="page-link" href="#1">1</a></li>
-              <li className="page-item"><a className="page-link" href="#2">2</a></li>
-              <li className="page-item"><a className="page-link" href="#3">3</a></li>
-              <li className="page-item disabled"><span className="page-link">...</span></li>
-              <li className="page-item"><a className="page-link" href="#10">10</a></li>
-              <li className="page-item"><a className="page-link" href="#next">&gt;</a></li>
-              <li className="page-item"><a className="page-link" href="#last">»</a></li>
-            </ul>
-          </nav>
+          {/* Mobile Pagination Layout (Buttons top, selector bottom) */}
+          <div className="d-flex d-md-none flex-column align-items-center gap-2">
+            <nav aria-label="Page navigation">
+              <ul className="pagination pagination-sm mb-0">
+                <li className="page-item disabled"><span className="page-link px-2">«</span></li>
+                <li className="page-item disabled"><span className="page-link px-2">&lt;</span></li>
+                <li className="page-item active"><span className="page-link px-2">1</span></li>
+                <li className="page-item"><span className="page-link px-2">2</span></li>
+                <li className="page-item"><span className="page-link px-2">3</span></li>
+                <li className="page-item disabled"><span className="page-link px-1">...</span></li>
+                <li className="page-item"><span className="page-link px-2">10</span></li>
+                <li className="page-item"><span className="page-link px-2">&gt;</span></li>
+                <li className="page-item"><span className="page-link px-2">»</span></li>
+              </ul>
+            </nav>
+
+            <div className="d-flex align-items-center gap-2 small text-muted mt-1">
+              <span>Trang</span>
+              <select className="form-select form-select-sm" style={{ width: '60px', padding: '2px 6px' }} defaultValue="1">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+              <span>Của 20</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,86 +1,195 @@
 import React from 'react';
 import { Box, Container, Typography, Stack, Link } from '@mui/material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import BusinessIcon from '@mui/icons-material/Business';
 
 export const MuiFooter: React.FC = () => {
   return (
-    <Box component="footer" sx={{ bgcolor: '#133e75', color: '#ffffff', py: 6, mt: 'auto' }}>
+    <Box
+      component="footer"
+      sx={{
+        background: 'linear-gradient(180deg, #0284c7 0%, #0369a1 40%, #0c4a6e 100%)',
+        color: '#ffffff',
+        pt: { xs: 4, md: 5 },
+        pb: 3,
+        mt: 'auto',
+      }}
+    >
       <Container maxWidth="xl">
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '5fr 3fr 4fr' },
-            gap: 4,
+            gridTemplateColumns: { xs: '1fr', md: '5fr 3.5fr 3.5fr' },
+            gap: { xs: 3.5, md: 4 },
             alignItems: 'flex-start',
           }}
         >
           {/* Company info */}
           <Box>
-            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 2 }}>
-              <BusinessIcon sx={{ fontSize: 32, color: '#60a5fa' }} />
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', mb: 1.5 }}>
+              <svg width="30" height="30" viewBox="0 0 34 34" fill="none">
+                <rect x="4" y="14" width="6" height="16" rx="3" fill="#ffffff" fillOpacity="0.8" />
+                <rect x="13" y="6" width="6" height="24" rx="3" fill="#ffffff" />
+                <rect x="22" y="10" width="7" height="20" rx="3.5" fill="#bae6fd" />
+              </svg>
+              <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: 0.5, fontSize: '1.15rem' }}>
                 BẤT ĐỘNG SẢN
               </Typography>
             </Stack>
 
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.75)', mb: 3, pr: { md: 4 } }}>
+            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', mb: 2.5, pr: { md: 4 }, fontSize: '0.82rem', lineHeight: 1.5 }}>
               Nền tảng công nghệ tiên phong &amp; dẫn đầu lĩnh vực kinh doanh bất động sản tại Việt Nam
             </Typography>
 
-            <Stack spacing={1.5}>
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-                <PhoneIcon sx={{ fontSize: 18, color: '#93c5fd' }} />
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+            <Stack spacing={1.2}>
+              <Stack direction="row" spacing={1.2} sx={{ alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '0.85rem' }}>📱</Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.82rem' }}>
                   0972 72 9999
                 </Typography>
               </Stack>
 
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-                <EmailIcon sx={{ fontSize: 18, color: '#93c5fd' }} />
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+              <Stack direction="row" spacing={1.2} sx={{ alignItems: 'center' }}>
+                <Typography sx={{ fontSize: '0.85rem' }}>✉️</Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.82rem' }}>
                   Contact@gmail.com
                 </Typography>
               </Stack>
 
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
-                <LocationOnIcon sx={{ fontSize: 18, color: '#93c5fd', mt: 0.3 }} />
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+              <Stack direction="row" spacing={1.2} sx={{ alignItems: 'flex-start' }}>
+                <Typography sx={{ fontSize: '0.85rem', mt: 0.2 }}>📍</Typography>
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.82rem' }}>
                   SB24-39, Sao Biển 24, KĐT Vinhomes Ocean Park, Xã Gia Lâm, TP Hà Nội, Việt Nam
                 </Typography>
               </Stack>
             </Stack>
           </Box>
 
-          {/* Directory Links */}
+          {/* Directory & Social Links */}
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 2 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 1.5, fontSize: '0.8rem', letterSpacing: 0.5 }}>
               Danh mục
             </Typography>
-            <Stack spacing={1.2}>
-              <Link href="#about" underline="hover" sx={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.875rem' }}>
+            <Stack spacing={0.8} sx={{ mb: 2.5 }}>
+              <Link href="#about" underline="hover" sx={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.82rem' }}>
                 • Giới thiệu
               </Link>
-              <Link href="#projects" underline="hover" sx={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.875rem' }}>
+              <Link href="#projects" underline="hover" sx={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.82rem' }}>
                 • Dự án
               </Link>
-              <Link href="#contact" underline="hover" sx={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.875rem' }}>
+              <Link href="#contact" underline="hover" sx={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.82rem' }}>
                 • Liên hệ
               </Link>
             </Stack>
+
+            <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 1.2, fontSize: '0.8rem', letterSpacing: 0.5 }}>
+              Kết nối
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Box
+                component="a"
+                href="#fb"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  bgcolor: '#ffffff',
+                  color: '#1d4ed8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                f
+              </Box>
+              <Box
+                component="a"
+                href="#yt"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  bgcolor: '#ffffff',
+                  color: '#dc2626',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  textDecoration: 'none',
+                }}
+              >
+                ▶
+              </Box>
+              <Box
+                component="a"
+                href="#in"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  bgcolor: '#ffffff',
+                  color: '#0284c7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                in
+              </Box>
+              <Box
+                component="a"
+                href="#tt"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  bgcolor: '#ffffff',
+                  color: '#0f172a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  textDecoration: 'none',
+                }}
+              >
+                🎵
+              </Box>
+              <Box
+                component="a"
+                href="#x"
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  bgcolor: '#ffffff',
+                  color: '#0f172a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                𝕏
+              </Box>
+            </Stack>
           </Box>
 
-          {/* Map Preview */}
+          {/* Mini Map Preview */}
           <Box>
             <Box
               sx={{
-                height: 160,
-                borderRadius: 2,
+                height: 150,
+                borderRadius: 2.5,
                 overflow: 'hidden',
-                border: '1px solid rgba(255,255,255,0.2)',
+                border: '1px solid rgba(255,255,255,0.25)',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                bgcolor: '#ffffff',
               }}
             >
               <iframe
@@ -94,6 +203,22 @@ export const MuiFooter: React.FC = () => {
             </Box>
           </Box>
         </Box>
+
+        {/* Copyright */}
+        <Typography
+          variant="caption"
+          sx={{
+            display: 'block',
+            textAlign: 'center',
+            pt: 3.5,
+            mt: 3,
+            borderTop: '1px solid rgba(255,255,255,0.15)',
+            color: 'rgba(255,255,255,0.7)',
+            fontSize: '0.75rem',
+          }}
+        >
+          © 2026 - Realestate. All rights reserved.
+        </Typography>
       </Container>
     </Box>
   );
